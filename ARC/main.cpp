@@ -9,5 +9,18 @@ using namespace std;
 
 int main ()
 {
+    ARC <int> cache;
+
+    int n = 1;
+
+    while(n)
+    {
+        cin >> n;
+
+        cache.push(n);
+
+        cache.print();
+    }           
+
     return 0;
 }

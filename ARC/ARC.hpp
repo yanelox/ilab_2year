@@ -3,103 +3,151 @@
 template <typename T>
 int ARC <T>::push (T n)
 {
-    auto res1 = find (T1.begin(), T1.end(), n);
-    auto res2 = find (T2.begin(), T2.end(), n);
-    auto res3 = find (B1.begin(), B1.end(), n);
-    auto res4 = find (B2.begin(), B2.end(), n);
+    auto stat = map.find(n);
+    
+    bool inT1 = 0, inT2 = 0, inB1 = 0, inB2 = 0;
 
-    bool inT1 = (res1 != T1.end());
-    bool inT2 = (res2 != T2.end());
-    bool inB1 = (res3 != B1.end());
-    bool inB2 = (res4 != B2.end());
+    if (stat != map.end())
+        switch (stat->second.source)
+        {
+        case source_list::T1:
+            inT1 = 1;
+            break;
+
+        case source_list::T2:
+            inT2 = 1;
+            break;
+
+        case source_list::B1:
+            inB1 = 1;
+            break;
+
+        case source_list::B2:
+            inB2 = 1;
+            break;
+
+        default:
+            break;
+        }
 
     if (inT1 or inT2)
-        case1 (n, inT1);
+        case1 (stat->second, inT1);
     
     else if (inB1)
-        case2 (n, inB2);
+        case2 (stat->second, inB2);
 
     else if (inB2)
-        case3 (n, inB2);
+        case3 (stat->second, inB2);
 
     else
     {
         if (T1.size() + B1.size() == c_size)
-            case4_1 (n, inB2);
+            case4_1 (inB2);
 
         else if ((T1.size() + B1.size() < c_size) and 
                 (T1.size() + B1.size() + T2.size() + B2.size() >= c_size))
-            case4_2 (n, inB2);
+            case4_2 (inB2);
 
         T1.push_front(n);
+        map.insert({n, {T1.begin(), source_list::T1}});
     }
 
     return 0;
 }
 
 template <typename T>
-int ARC <T>::case1 (T n, bool inT1)
+int ARC <T>::case1 (my_iterator_ <T> n, bool inT1)
 {
+    T page = *(n.pointer);
+
     if (inT1)
-        T1.remove(n);
+        T1.erase(n.pointer);
 
     else
-        T2.remove(n);
+        T2.erase(n.pointer);
 
-    T2.push_front(n);
+    T2.push_front(page);
+    
+    map[page] = {T2.begin(), source_list::T2};
 
     return 0;
 }
 
 template <typename T>
-int ARC <T>::case2 (T n, bool inB2)
+int ARC <T>::case2 (my_iterator_ <T> n, bool inB2)
 {
+    T page = *(n.pointer);
+
     p_size = min (c_size, p_size + max (B2.size() / B1.size(),  1ul));
 
     replace(inB2);
 
-    B1.remove(n);
+    B1.erase(n.pointer);
 
-    T2.push_front(n);
+    T2.push_front(page);
+
+    map[page] = {T2.begin(), source_list::T2};
 
     return 0;
 }
 
 template <typename T>
-int ARC <T>::case3 (T n, bool inB2)
+int ARC <T>::case3 (my_iterator_ <T> n, bool inB2)
 {
+    T page = *(n.pointer);
+
     p_size = max (0ul, p_size - max (B1.size() / B2.size(), 1ul));
 
     replace(inB2);
 
-    B2.remove(n);
+    B2.erase(n.pointer);
 
-    T2.push_front(n);
+    T2.push_front(page);
+
+    map[page] = {T2.begin(), source_list::T2};
 
     return 0;
 }
 
 template <typename T>
-int ARC <T>::case4_1 (T n, bool inB2)
+int ARC <T>::case4_1 (bool inB2)
 {
+    T page;
+
     if (T1.size() < c_size)
     {
-        B1.pop_back();  
+        page = B1.back();
+
+        B1.pop_back();
 
         replace(inB2);
     }
 
     else
+    {
+        page = T1.back();
+
         T1.pop_back();
+    }
+
+    map.erase(page);
 
     return 0;
 }
 
 template <typename T>
-int ARC <T>::case4_2 (T n, bool inB2)
+int ARC <T>::case4_2 (bool inB2)
 {
+    T page;
+
     if (T1.size() + B1.size() + T2.size() + B2.size() == 2 * c_size)
+    {
+        page = B2.back();
+
         B2.pop_back();
+
+        map.erase(page);
+    }
 
     replace(inB2);
 
@@ -119,6 +167,8 @@ int ARC <T>::replace (bool inB2)
         T1.pop_back();
 
         B1.push_front(swap_var);
+
+        map[swap_var] = {B1.begin(), source_list::B1};
     }
 
     else
@@ -128,6 +178,8 @@ int ARC <T>::replace (bool inB2)
         T2.pop_back();
 
         B2.push_front(swap_var);
+
+        map[swap_var] = {B2.begin(), source_list::B1};
     }
 
     return 0;
