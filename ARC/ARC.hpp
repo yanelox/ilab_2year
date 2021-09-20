@@ -3,11 +3,16 @@
 template <typename T>
 int ARC <T>::push (T n)
 {
+    int ret_value = 0;
+
     auto stat = map.find(n);
     
     bool inT1 = 0, inT2 = 0, inB1 = 0, inB2 = 0;
 
     if (stat != map.end())
+    {
+        ret_value = 1;
+
         switch (stat->second.source)
         {
         case source_list::T1:
@@ -29,6 +34,7 @@ int ARC <T>::push (T n)
         default:
             break;
         }
+    }
 
     if (inT1 or inT2)
         case1 (stat->second, inT1);
@@ -52,7 +58,7 @@ int ARC <T>::push (T n)
         map.insert({n, {T1.begin(), source_list::T1}});
     }
 
-    return 0;
+    return ret_value;
 }
 
 template <typename T>
@@ -157,7 +163,7 @@ int ARC <T>::case4_2 (bool inB2)
 template <typename T>
 int ARC <T>::replace (bool inB2)
 {
-    long int swap_var = 0;
+    T swap_var = 0;
 
     if (T1.size() >= 1 and ((inB2 and T1.size() == p_size) or 
         T1.size() > p_size))
