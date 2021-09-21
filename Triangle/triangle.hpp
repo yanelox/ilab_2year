@@ -38,10 +38,7 @@ double vector_::mod () const
 
 int vector_::print () const
 {
-    if(!this->is_valid())
-        return -1;
-
-    printf ("(%lg, %lg, %lg)\n", x, y, z);
+    printf ("vector (%lg, %lg, %lg)\n", x, y, z);
 
     return 0;
 }
@@ -55,7 +52,7 @@ bool line_::is_valid () const
     return r.is_valid() and a.is_valid();
 }
 
-int line_::point_to_line (vector_ &v1, vector_ &v2)
+int line_::point_to_line (const vector_ &v1, const vector_ &v2)
 {
     if (!v1.is_valid() or !v2.is_valid())
         return -1;
@@ -66,6 +63,20 @@ int line_::point_to_line (vector_ &v1, vector_ &v2)
     return 0;
 }
 
+int line_::print () const
+{
+    cout << "line\n{\n";
+
+    cout << "r = ";
+    r.print();
+
+    cout << "a = ";
+    a.print();
+
+    cout << "}\n";
+
+    return 0;
+}
 
 //triangle
 
@@ -75,48 +86,25 @@ bool triangle_::is_valid () const
     return a.is_valid() and b.is_valid() and c.is_valid();
 }
 
-int triangle_::vec_to_tr (const vector_ &v1, const vector_ &v2, const vector_ &v3)
-{
-    if (!v1.is_valid() or !v2.is_valid() or !v3.is_valid())
-        return -1;
-
-    a = v1;
-    b = v2;
-    c = v3;
-
-    return 0;
-}
-
 bool triangle_::contain_vec (const vector_ &v) const
 {
     if (!v.is_valid() or !this->is_valid())
         return false;
 
     double a1, a2, a3;
+    
+    const vector_ r1 = a - v, r2 = b - v, r3 = c - v;
 
-    if (v.is_equal (a))
+    if (d_equal(0, r1.mod()) or d_equal(0, r2.mod()) or d_equal(0, r3.mod()))
         return true;
 
-    else
-        a1 = acos ((v ^ a) / (v.mod() * a.mod()));
+    a1 = acos ((r1 ^ r2) / (r1.mod() * r2.mod()));
+    a2 = acos ((r2 ^ r3) / (r2.mod() * r3.mod()));
+    a3 = acos ((r3 ^ r1) / (r3.mod() * r1.mod()));
 
-
-    if (v.is_equal (b))
+    if (d_equal (a1 + a2 + a3, 2 * pi_))
         return true;
-
-    else
-        a2 = acos ((v ^ b) / (v.mod() * b.mod()));
-
-
-    if (v.is_equal (c))
-        return true;
-
-    else
-        a3 = acos ((v ^ c) / (v.mod() * c.mod()));
-
-    if (d_equal (a1 + a2 + a3, 360.0))
-        return true;
-
+    
     return false;
 }
 
@@ -124,16 +112,32 @@ bool triangle_::trl_intersect (const triangle_ &t) const
 {
     if (!t.is_valid() or !this->is_valid())
         return false;
-
-    surface_ s {};
-
-    s.tr_to_sur (t);
+    
+    surface_ s {t.a, t.b, t.c};
 
     line_segment_ a1 {a, b}, a2 {b, c}, a3 {c, a};
 
     vector_ res1 = a1.sur_its_loc (s), res2 = a2.sur_its_loc (s), res3 = a3.sur_its_loc (s);
 
     return t.contain_vec (res1) or t.contain_vec (res2) or t.contain_vec (res3);
+}
+
+int triangle_::print () const
+{
+    cout << "triangle\n{\n";
+
+    cout << "a = ";
+    a.print();
+
+    cout << "b = ";
+    b.print();
+
+    cout << "c = ";
+    c.print();
+
+    cout << "}\n";
+
+    return 0;
 }
 
 
@@ -197,29 +201,40 @@ mutual_loc surface_::sur_intersect (const surface_ &an_sur) const
     return IS_INTERSECT;
 }
 
-int surface_::vec_to_sur (const vector_ &v1, const vector_ &v2, const vector_ &v3)
+int surface_::print () const
 {
-    if (!v1.is_valid() or !v2.is_valid() or !v3.is_valid())
-        return -1;
+    cout << "surface\n{\n";
 
-    double x1 = v1.x, y1 = v1.y, z1 = v1.z;
-    double x2 = v2.x, y2 = v2.y, z2 = v2.z;
-    double x3 = v3.x, y3 = v3.y, z3 = v3.z;
+    cout << a << "*x ";
 
-    a = (y2 - y1) * (z3 - z1) - (y3 - y1) * (z2 - z1);
-    b = (x3 - x1) * (z2 - z1) - (x2 - x1) * (z3 - z1);
-    c = (x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1);
-    d = -a * x1 - b * y1 - c * z1;
+    if (b > 0)
+        cout << "+ " << b;
+
+    else
+        cout << "- " << abs(b);
+
+    cout << "*y ";
+
+    if (c > 0)
+        cout << "+ " << c;
+
+    else
+        cout << "- " << abs(c);
+
+    cout << "*z ";
+
+    if (d > 0)
+        cout << "+ " << d << endl;
+
+    else
+        cout << "- " << abs(d) << " = 0" << endl;
+    
+    n.print();
+    r.print();
+
+    cout << "}\n";
 
     return 0;
-}
-
-int surface_::tr_to_sur (const triangle_ &t)
-{
-    if (!t.is_valid())
-        return -1;
-
-    return vec_to_sur (t.a, t.b, t.c);
 }
 
 
@@ -255,7 +270,7 @@ vector_ line_segment_::sur_its_loc (const surface_ &s) const
 
     if (!s.is_valid() or !this->is_valid())
         return res;
-
+    
     double alpha = 0;
 
     if (sur_intersect (s) != IS_INTERSECT)
@@ -267,4 +282,19 @@ vector_ line_segment_::sur_its_loc (const surface_ &s) const
     res = a + (b - a) * alpha;
 
     return res;
+}
+
+int line_segment_::print  () const
+{
+    cout << "line_segment\n{\n";
+
+    cout << "a = ";
+    a.print();
+
+    cout << "b = ";
+    b.print();
+
+    cout << "}\n";
+
+    return 0;
 }

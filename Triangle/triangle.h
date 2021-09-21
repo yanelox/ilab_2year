@@ -7,6 +7,8 @@ using namespace std;
 
 bool d_equal (double x, double y);
 
+const double pi_ = acos(-1);
+
 enum mutual_loc
 {
     ERROR = 0,
@@ -112,7 +114,7 @@ class line_
 
     bool is_valid () const;
 
-    int point_to_line (vector_ &v1, vector_ &v2);
+    int point_to_line (const vector_ &v1, const vector_ &v2);
 
     int print () const;
 };
@@ -148,8 +150,6 @@ class triangle_
 
     bool is_valid () const;
 
-    int vec_to_tr (const vector_ &v1, const vector_ &v2, const vector_ &v3);
-
     bool contain_vec (const vector_ &v) const;
 
     bool trl_intersect (const triangle_ &t) const;
@@ -170,11 +170,7 @@ class surface_
     surface_ (double A, double B, double C, double D): a(A), b(B), c(C), d(D), n{A, B, C}, r{} 
     {
         if (d_equal (D, 0))
-        {
-            r.x = 0;
-            r.y = 0;
-            r.z = 0;
-        }
+            r = {0, 0, 0};
 
         else
         {
@@ -198,9 +194,51 @@ class surface_
         }
     }
 
-    surface_ (const vector_ &N, const vector_ &R): a (N.x), b(N.y), c(N.z), d(NAN), n(N), r(R)
+    surface_ (const vector_ &N, const vector_ &R): a(N.x), b(N.y), c(N.z), d(NAN), n(N), r(R)
     {
         d = - (a * R.x + b * R.y + c * R.z);
+    }
+
+    surface_ (const vector_ &v1, const vector_ &v2, const vector_ &v3): 
+    a(NAN), b(NAN), c(NAN), d(NAN), n{}, r{}
+    {
+        if (v1.is_valid() and v2.is_valid() and v3.is_valid())
+        {
+            double x1 = v1.x, y1 = v1.y, z1 = v1.z;
+            double x2 = v2.x, y2 = v2.y, z2 = v2.z;
+            double x3 = v3.x, y3 = v3.y, z3 = v3.z;
+
+            a = (y2 - y1) * (z3 - z1) - (y3 - y1) * (z2 - z1);
+            b = (x3 - x1) * (z2 - z1) - (x2 - x1) * (z3 - z1);
+            c = (x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1);
+            d = -a * x1 - b * y1 - c * z1;
+
+            n = {a, b, c};
+            
+            if (d_equal (d, 0))
+                r = {0, 0, 0};
+
+            else
+            {
+                if (d_equal (a, 0))
+                    r.x = 0;
+
+                else
+                    r.x = - d / a;
+
+                if (d_equal (b, 0))
+                    r.y = 0;
+
+                else
+                    r.y = - d / b;
+
+                if (d_equal (c, 0))
+                    r.z = 0;
+                
+                else
+                    r.z = d / c;
+            }
+        }
     }
 
     ~surface_ ()
@@ -232,10 +270,6 @@ class surface_
     bool is_valid () const;
 
     mutual_loc sur_intersect (const surface_ &an_sur) const;
-
-    int vec_to_sur (const vector_ &v1, const vector_ &v2, const vector_ &v3);
-
-    int tr_to_sur (const triangle_ &t);
 
     int print () const;
 };
