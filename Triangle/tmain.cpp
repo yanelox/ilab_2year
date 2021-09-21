@@ -17,4 +17,8 @@ int main ()
     cout << "-------------------surface_test-------------------\n";
     surface_test();
     cout << endl;
+
+    cout << "-------------------line_segment_test-------------------\n";
+    line_segment_test();
+    cout << endl;
 }

@@ -63,3 +63,26 @@ void surface_test ()
 
     cout << b.sur_intersect(d) << c.sur_intersect(d) << c.sur_intersect(b) << endl;   
 }
+
+void line_segment_test ()
+{
+    line_segment_ a {};
+    line_segment_ b {{0, 0, 0}, {1, 1, 1}};
+
+    surface_ c {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+
+    vector_ d {};
+
+    cout << a.is_valid() << b.is_valid() << endl;
+
+    a.print();
+    b.print();
+
+    cout << b.sur_intersect (c) << endl;
+
+    d = b.sur_its_loc (c);
+
+    d.print();
+}
+
+//TODO: make tests for line_segment_
