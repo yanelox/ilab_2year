@@ -7,11 +7,13 @@ using namespace std;
 
 bool d_equal (double x, double y);
 
-enum surface_loc
+enum mutual_loc
 {
+    ERROR = 0,
     IS_EQUAL = 1,
     IS_PARALLEL = 2,
-    IS_INTERSECT = 3
+    IS_INTERSECT = 3,
+    NOT_INTERSECT = 4
 };
 
 
@@ -21,10 +23,8 @@ class vector_
 
     double x, y, z;
 
-    bool is_equal (const vector_ &an_vec) const;
-
-    vector_ (): x(NAN), y(NAN), z(NAN) {};
-    vector_  (double X, double Y, double Z): x(X), y(Y), z(Z) {};
+    vector_ (): x(NAN), y(NAN), z(NAN) {}
+    vector_  (double X, double Y, double Z): x(X), y(Y), z(Z) {}
 
     ~vector_ ()
     {
@@ -50,15 +50,38 @@ class vector_
     }
 
 
-    vector_ operator + (vector_ &other)
+    vector_ operator + (const vector_ &other) const
     {
         return vector_ {x + other.x, y + other.y, z + other.z};
     }
 
-    vector_ operator - (vector_ &other)
+    vector_ operator - (const vector_ &other) const
     {
         return vector_ {x - other.x, y - other.y, z - other.z};
     }
+
+    vector_ operator * (const vector_ &other) const
+    {
+        return vector_ {y * other.z - other.y * z, other.x * z - other.z * x, x * other.y - y * other.x};
+    }
+
+    vector_ operator * (double a) const
+    {
+        return vector_ {x * a, y * a, z * a};
+    }
+
+    double operator ^ (const vector_ &other) const
+    {
+        return x * other.x + y * other.y + z * other.z;
+    }
+
+    bool is_equal (const vector_ &an_vec) const;
+
+    bool is_valid () const;
+
+    double mod () const;
+
+    int print () const;
 };
 
 
@@ -68,10 +91,10 @@ class line_
 
     vector_ r, a;
 
-    line_ (): r{}, a{} {};
-    line_ (const vector_ &R, const vector_ &A): r(R), a(A) {};
+    line_ (): r{}, a{} {}
+    line_ (const vector_ &R, const vector_ &A): r(R), a(A) {}
 
-    ~line_ () {};
+    ~line_ () {}
 
     line_ &operator = (const line_ &other)
     {
@@ -87,7 +110,11 @@ class line_
         a = other.a;
     }
 
+    bool is_valid () const;
+
     int point_to_line (vector_ &v1, vector_ &v2);
+
+    int print () const;
 };
 
 
@@ -98,10 +125,10 @@ class triangle_
     
     vector_ a, b, c;
 
-    triangle_ (): a{}, b{}, c{} {};
-    triangle_ (const vector_ &A, const vector_ &B, const vector_ &C): a(A), b(B), c(C) {};
+    triangle_ (): a{}, b{}, c{} {}
+    triangle_ (const vector_ &A, const vector_ &B, const vector_ &C): a(A), b(B), c(C) {}
 
-    ~triangle_ () {};
+    ~triangle_ () {}
 
     triangle_ &operator = (const triangle_ &other)
     {
@@ -119,7 +146,15 @@ class triangle_
         c = other.c;
     }
 
-    void vec_to_tr (vector_ &v1, vector_ &v2, vector_ &v3);
+    bool is_valid () const;
+
+    int vec_to_tr (const vector_ &v1, const vector_ &v2, const vector_ &v3);
+
+    bool contain_vec (const vector_ &v) const;
+
+    bool trl_intersect (const triangle_ &t) const;
+
+    int print () const;
 };
 
 
@@ -129,8 +164,44 @@ class surface_
 
     double a, b, c, d;
 
-    surface_ (): a(NAN), b(NAN), c(NAN), d(NAN) {};
-    surface_ (double A, double B, double C, double D): a(A), b(B), c(C), d(D) {};
+    vector_ n, r;
+
+    surface_ (): a(NAN), b(NAN), c(NAN), d(NAN), n{}, r{} {}
+    surface_ (double A, double B, double C, double D): a(A), b(B), c(C), d(D), n{A, B, C}, r{} 
+    {
+        if (d_equal (D, 0))
+        {
+            r.x = 0;
+            r.y = 0;
+            r.z = 0;
+        }
+
+        else
+        {
+            if (d_equal (A, 0))
+                r.x = 0;
+
+            else
+                r.x = - D / A;
+
+            if (d_equal (B, 0))
+                r.y = 0;
+
+            else
+                r.y = - D / B;
+
+            if (d_equal (C, 0))
+                r.z = 0;
+            
+            else
+                r.z = D / C;
+        }
+    }
+
+    surface_ (const vector_ &N, const vector_ &R): a (N.x), b(N.y), c(N.z), d(NAN), n(N), r(R)
+    {
+        d = - (a * R.x + b * R.y + c * R.z);
+    }
 
     ~surface_ ()
     {
@@ -158,13 +229,34 @@ class surface_
         d = other.d;
     }
 
-    surface_loc get_loc (const surface_ &an_sur) const;
+    bool is_valid () const;
 
-    void vec_to_sur (const vector_ &v1, const vector_ &v2, const vector_ &v3);
+    mutual_loc sur_intersect (const surface_ &an_sur) const;
 
-    void tr_to_sur (const triangle_ &t);
+    int vec_to_sur (const vector_ &v1, const vector_ &v2, const vector_ &v3);
+
+    int tr_to_sur (const triangle_ &t);
+
+    int print () const;
 };
 
-// TODO: 1) сделать прямую из стороны треугольника 
-// TODO: 2) найти точку пересечения прямой и плоскости
-// TODO: 3) проверить принадлежит ли точка прямой (либо сумма углов 360, либо два угла в сумме третьей)
+
+class line_segment_
+{
+    public:
+
+    vector_ a, b;
+
+    line_segment_ (): a{}, b{} {};
+    line_segment_ (const vector_ &A, const vector_ &B): a(A), b(B) {};
+
+    ~line_segment_ () {};
+
+    bool is_valid () const;
+
+    mutual_loc sur_intersect (const surface_ &s) const;
+
+    vector_ sur_its_loc (const surface_ &s) const;
+
+    int print () const;
+};

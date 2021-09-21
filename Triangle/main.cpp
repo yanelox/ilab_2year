@@ -1,6 +1,8 @@
 #include "triangle.hpp"
+#include <stdio.h>
+
 
 int main ()
 {
-    line_ a;
+
 }
