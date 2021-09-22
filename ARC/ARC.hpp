@@ -84,7 +84,7 @@ int ARC <T>::case2 (my_iterator_ <T> n, bool inB2)
 {
     T page = *(n.pointer);
 
-    p_size = min (c_size, p_size + max (B2.size() / B1.size(),  1ul));
+    p_size = min <size_t> (c_size, p_size + max <size_t> (B2.size() / B1.size(),  1ul));
 
     replace(inB2);
 
@@ -102,7 +102,7 @@ int ARC <T>::case3 (my_iterator_ <T> n, bool inB2)
 {
     T page = *(n.pointer);
 
-    p_size = max (0ul, p_size - max (B1.size() / B2.size(), 1ul));
+    p_size = max <size_t> (0ul, p_size - max <size_t> ( B1.size() / B2.size(), 1ul));
 
     replace(inB2);
 
