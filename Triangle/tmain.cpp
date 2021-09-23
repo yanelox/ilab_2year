@@ -21,4 +21,7 @@ int main ()
     cout << "-------------------line_segment_test-------------------\n";
     line_segment_test();
     cout << endl;
+
+    cout << "-------------------end_to_end_test-------------------\n";
+    end_to_end_test();
 }

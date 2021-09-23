@@ -27,7 +27,7 @@ int main ()
     for (int i = 0; i < n; ++i)
         for (int j = i + 1; j < n; ++j)
         {
-            if (t[i].trl_intersect (t[j]))
+            if (t[i].trl_intersect (t[j]) or t[j].trl_intersect (t[i]))
                 cout << i << " " << j << endl;
         }
 

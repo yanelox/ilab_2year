@@ -85,4 +85,40 @@ void line_segment_test ()
     d.print();
 }
 
-//TODO: make tests for line_segment_
+void end_to_end_test ()
+{
+    triangle_ *a = new triangle_ [10];
+
+    vector <vector<int>> res = {{1, 3},
+                                {1, 4},
+                                {1, 5},
+                                {2, 3},
+                                {3, 4},
+                                {3, 5},
+                                {3, 6},
+                                {4, 5},
+                                {5, 6}};
+
+    a[0] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+    a[1] = {{2, 0, 0}, {0, 2, 0}, {0, 0, 2}};
+    a[2] = {{0, 0, 0}, {0, 1, 1}, {1, 1, 2}};
+    a[3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+    a[4] = {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}};
+    a[5] = {{0, 0, 0}, {0, 0, -1}, {1, 0, -1}};
+    a[6] = {{0, 0, 7}, {1, 0, 7}, {0, 1, 7}};
+
+    cout << "programm answers:" << endl;
+
+    for (int i = 0; i < 10; ++i)
+        for (int j = i + 1; j < 10; ++j)
+            if (a[i].is_valid() and a[j].is_valid())
+                if (a[i].trl_intersect(a[j]) or a[j].trl_intersect(a[i]))
+                    cout << i + 1 << " " << j + 1 << endl; 
+
+    cout << "true answers:" << endl;
+
+    for (auto i:res)
+        cout << i[0] << " " << i[1] << endl;
+
+    delete[] a;
+}

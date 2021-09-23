@@ -116,7 +116,7 @@ bool triangle_::trl_intersect (const triangle_ &t) const
     surface_ s {t.a, t.b, t.c};
 
     line_segment_ a1 {a, b}, a2 {b, c}, a3 {c, a};
-    
+   
     vector_ res1 = a1.sur_its_loc (s), res2 = a2.sur_its_loc (s), res3 = a3.sur_its_loc (s);
     
     return t.contain_vec (res1) or t.contain_vec (res2) or t.contain_vec (res3);
@@ -253,10 +253,18 @@ bool line_segment_::is_valid () const
 
 mutual_loc line_segment_::sur_intersect (const surface_ &s) const
 {
+    bool ac = 0, bc = 0;
+
+    ac = s.content_vec (a);
+    bc = s.content_vec (b);
+
     if(!s.is_valid() or !this->is_valid())
         return ERROR;
 
-    if (s.content_vec (a) or s.content_vec(b))
+    if (ac and bc)
+        return IS_CONTENTS;
+
+    if (ac or bc)
         return IS_INTERSECT;
 
     double f = (a - s.r) ^ s.n;
@@ -276,19 +284,26 @@ vector_ line_segment_::sur_its_loc (const surface_ &s) const
 {
     vector_ res;
 
+    double alpha = 0;
+    
+    int its_res = -1;
+
     if (!s.is_valid() or !this->is_valid())
         return res;
-    
-    double alpha = 0;
 
-    if (sur_intersect (s) != IS_INTERSECT)
+    its_res = sur_intersect(s);
+
+    if (its_res == IS_CONTENTS)
+        return a;
+
+    if (its_res != IS_INTERSECT)
         return res;
     
     alpha = (s.r ^ s.n) - (a ^ s.n);
     alpha = alpha / ((b - a) ^ s.n);
-
+    
     res = a + (b - a) * alpha;
-
+    
     return res;
 }
 

@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <cmath>
+#include <map>
+#include <vector>
 
 using namespace std;
 
@@ -11,11 +13,12 @@ const double pi_ = acos(-1);
 
 enum mutual_loc
 {
-    ERROR = 0,
-    IS_EQUAL = 1,
-    IS_PARALLEL = 2,
-    IS_INTERSECT = 3,
-    NOT_INTERSECT = 4
+    ERROR           = 0,
+    IS_EQUAL        = 1,
+    IS_PARALLEL     = 2,
+    IS_INTERSECT    = 3,
+    NOT_INTERSECT   = 4,
+    IS_CONTENTS     = 5
 };
 
 
