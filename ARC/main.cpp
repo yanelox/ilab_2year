@@ -11,16 +11,20 @@ int main ()
 {
     ARC <int> cache;
 
-    int n = 1;
+    int n = 0;
+
+    long int res = 0;
+
+    cin >> n;
 
     while(n)
     {
         cin >> n;
 
-        cache.push(n);
-
-        cache.print();
+        res += cache.push(n);
     }           
+
+    cout << res << endl;
 
     return 0;
 }
