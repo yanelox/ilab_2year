@@ -271,6 +271,8 @@ class surface_
 
     mutual_loc sur_intersect (const surface_ &an_sur) const;
 
+    bool content_vec (const vector_ &vec) const;
+
     int print () const;
 };
 
