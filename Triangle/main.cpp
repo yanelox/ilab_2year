@@ -25,10 +25,13 @@ int main ()
     }
 
     for (int i = 0; i < n; ++i)
-        for (int j = i + 1; j < n; ++j)
+        for (int j = 0; j < n; ++j)
         {
-            if (t[i].trl_intersect (t[j]) or t[j].trl_intersect (t[i]))
-                cout << i << " " << j << endl;
+            if (j != i and t[i].trl_intersect (t[j]))
+            {   
+                cout << i + 1 << endl;
+                break;
+            }
         }
 
     delete[] data;
