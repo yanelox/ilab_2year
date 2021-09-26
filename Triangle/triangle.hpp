@@ -321,3 +321,24 @@ int line_segment_::print  () const
 
     return 0;
 }
+
+void solution (triangle_ *t, int n)
+{
+    set <int> res;
+
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < n; ++j)
+        {
+            if (i != j and t[i].trl_intersect(t[j]))
+            {  
+                // cout << i << endl;
+
+                res.insert(i);
+                res.insert(j);
+                break;
+            }
+        }
+
+    for (auto i:res)
+        cout << i << endl;
+}

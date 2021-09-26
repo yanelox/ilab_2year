@@ -89,15 +89,7 @@ void end_to_end_test ()
 {
     triangle_ *a = new triangle_ [10];
 
-    vector <vector<int>> res = {{1, 3},
-                                {1, 4},
-                                {1, 5},
-                                {2, 3},
-                                {3, 4},
-                                {3, 5},
-                                {3, 6},
-                                {4, 5},
-                                {5, 6}};
+    int res[] = {0, 1, 2, 3, 4, 5};
 
     a[0] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
     a[1] = {{2, 0, 0}, {0, 2, 0}, {0, 0, 2}};
@@ -109,16 +101,30 @@ void end_to_end_test ()
 
     cout << "programm answers:" << endl;
 
-    for (int i = 0; i < 10; ++i)
-        for (int j = i + 1; j < 10; ++j)
-            if (a[i].is_valid() and a[j].is_valid())
-                if (a[i].trl_intersect(a[j]) or a[j].trl_intersect(a[i]))
-                    cout << i + 1 << " " << j + 1 << endl; 
+    solution (a, 7);
 
     cout << "true answers:" << endl;
 
     for (auto i:res)
-        cout << i[0] << " " << i[1] << endl;
+        cout << i << endl;
 
     delete[] a;
+}
+
+void big_test ()
+{
+    int size = 100000;
+
+    triangle_ *t = new triangle_ [size];
+
+    for (int i = 0; i < size; ++i)
+    {
+        t[i].a = {(double) (rand() % 200 - 100), (double) (rand() % 200 - 100), (double) (rand() % 200 - 100)};
+        t[i].b = {(double) (rand() % 200 - 100), (double) (rand() % 200 - 100), (double) (rand() % 200 - 100)};
+        t[i].c = {(double) (rand() % 200 - 100), (double) (rand() % 200 - 100), (double) (rand() % 200 - 100)};
+    }
+
+    solution (t, size);
+
+    delete[] t;
 }

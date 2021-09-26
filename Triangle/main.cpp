@@ -24,15 +24,7 @@ int main ()
                 {data[6], data[7], data[8]}};
     }
 
-    for (int i = 0; i < n; ++i)
-        for (int j = 0; j < n; ++j)
-        {
-            if (j != i and t[i].trl_intersect (t[j]))
-            {   
-                cout << i + 1 << endl;
-                break;
-            }
-        }
+    solution (t, n);
 
     delete[] data;
     delete[] t;
