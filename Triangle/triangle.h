@@ -1,13 +1,15 @@
 #pragma once
 
+#include <algorithm>
+#include <bitset>
 #include <iostream>
 #include <cmath>
 #include <map>
 #include <vector>
-#include <set> 
+#include <set>
 
-using namespace std;
-
+namespace geom
+{
 bool d_equal (double x, double y);
 
 const double pi_ = acos(-1);
@@ -29,7 +31,7 @@ class vector_
 
     double x, y, z;
 
-    vector_ (): x(NAN), y(NAN), z(NAN) {}
+    vector_ (): x{NAN}, y{NAN}, z{NAN} {}
     vector_  (double X, double Y, double Z): x(X), y(Y), z(Z) {}
 
     ~vector_ ()
@@ -87,7 +89,7 @@ class vector_
 
     double mod () const;
 
-    int print () const;
+    int print (int tab_number) const;
 };
 
 
@@ -120,7 +122,7 @@ class line_
 
     int point_to_line (const vector_ &v1, const vector_ &v2);
 
-    int print () const;
+    int print (int tab_number) const;
 };
 
 
@@ -158,7 +160,7 @@ class triangle_
 
     bool trl_intersect (const triangle_ &t) const;
 
-    int print () const;
+    int print (int tab_number) const;
 };
 
 
@@ -277,7 +279,7 @@ class surface_
 
     bool content_vec (const vector_ &vec) const;
 
-    int print () const;
+    int print (int tab_number) const;
 };
 
 
@@ -288,7 +290,7 @@ class line_segment_
     vector_ a, b;
 
     line_segment_ (): a{}, b{} {};
-    line_segment_ (const vector_ &A, const vector_ &B): a(A), b(B) {};
+    line_segment_ (const vector_ &A, const vector_ &B): a{A}, b{B} {};
 
     ~line_segment_ () {};
 
@@ -298,5 +300,110 @@ class line_segment_
 
     vector_ sur_its_loc (const surface_ &s) const;
 
+    int print (int tab_number) const;
+};
+
+
+class prlppd_  //parallelepiped
+{
+    public:
+    
+    double x1, x2, y1, y2, z1, z2;
+
+    prlppd_ (): x1{NAN}, x2{NAN}, y1{NAN}, y2{NAN}, z1{NAN}, z2{NAN} {};
+
+    prlppd_ (double X1, double X2, 
+             double Y1, double Y2, 
+             double Z1, double Z2): x1{X1}, x2{X2}, y1{Y1}, y2{Y2}, z1{Z1}, z2{Z2} {};
+
+    prlppd_ &operator = (const prlppd_ &other)
+    {
+        x1 = other.x1;
+        y1 = other.y1;
+        z1 = other.z1;
+        x2 = other.x2;
+        y2 = other.y2;
+        z2 = other.z2;
+
+        return *this;
+    }
+
+    prlppd_ (const prlppd_ &other)
+    {
+        x1 = other.x1;
+        y1 = other.y1;
+        z1 = other.z1;
+        x2 = other.x2;
+        y2 = other.y2;
+        z2 = other.z2;  
+    }
+
+    bool is_valid ();
+
+    int contain_vec (const vector_ &vec);
+
+    int contain_tr  (const triangle_ &t);
+
+    int print (int tab_number) const;
+};
+
+
+class node_
+{
+    public:
+
+    prlppd_ p;
+
+    node_ *nodes;
+
+    std::vector <triangle_> t_;
+
+    node_ (): nodes{nullptr}, p{}, t_{} {};
+
+    node_ (double x1, double x2,
+           double y1, double y2,
+           double z1, double z2): nodes{nullptr}, p{x1, x2, y1, y2, z1, z2}, t_{} {};
+                                
+    node_ (const prlppd_ &P): nodes{nullptr}, p{P}, t_{} {};
+
+    ~node_ ()
+    {
+        if (nodes != nullptr)
+            delete[] nodes;
+    };
+
+    bool is_valid ();
+
+    int make_childs ();
+
+    int push (const triangle_ &t);
+
+    int print (int tab_number) const;
+};
+
+
+class my_tree
+{
+    public:
+
+    node_ top;
+
+    my_tree (): top{} {};
+
+    my_tree (double x1, double x2, 
+             double y1, double y2, 
+             double z1, double z2): top {x1, x2, y1, y2, z1, z2} {};
+    
+
+    ~my_tree () {};
+
+    int fill_tree (const triangle_ *t, int n);
+
+    int push (const triangle_ &t);
+
     int print () const;
 };
+
+
+    int tab_func (int tab_number);
+}

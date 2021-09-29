@@ -1,31 +1,30 @@
 #include "triangle.hpp"
-#include <stdio.h>
-
 
 int main ()
 {
     int n;
+    geom::triangle_ *T = nullptr; 
+    double data[9];
 
-    double* data;
-    triangle_* t;
+    geom::my_tree Tree;
 
-    cin >> n;
+    std::cin >> n;
 
-    data = new double [9];
-    t = new triangle_ [n];
+    T = new geom::triangle_ [n];
 
     for (int i = 0; i < n; ++i)
     {
         for (int j = 0; j < 9; ++j)
-            cin >> data[j];
+            std::cin >> data[j];
 
-        t[i] = {{data[0], data[1], data[2]},
+        T[i] = {{data[0], data[1], data[2]},
                 {data[3], data[4], data[5]},
                 {data[6], data[7], data[8]}};
     }
 
-    solution (t, n);
+    Tree.fill_tree(T, n);
 
-    delete[] data;
-    delete[] t;
+    Tree.print();
+
+    delete[] T;
 }

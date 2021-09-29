@@ -2,28 +2,28 @@
 
 int main ()
 {   
-    // cout << "-------------------vector_test-------------------\n";
-    // vector_test();
-    // cout << endl;
+    std::cout << "-------------------vector_test-------------------\n";
+    vector_test();
+    std::cout << std::endl;
 
-    // cout << "-------------------line_test-------------------\n";
-    // line_test();
-    // cout << endl;
+    std::cout << "-------------------line_test-------------------\n";
+    line_test();
+    std::cout << std::endl;
 
-    // cout << "-------------------triangle_test-------------------\n";
-    // triangle_test();
-    // cout << endl;
+    std::cout << "-------------------triangle_test-------------------\n";
+    triangle_test();
+    std::cout << std::endl;
 
-    // cout << "-------------------surface_test-------------------\n";
-    // surface_test();
-    // cout << endl;
+    std::cout << "-------------------surface_test-------------------\n";
+    surface_test();
+    std::cout << std::endl;
 
-    // cout << "-------------------line_segment_test-------------------\n";
-    // line_segment_test();
-    // cout << endl;
+    std::cout << "-------------------line_segment_test-------------------\n";
+    line_segment_test();
+    std::cout << std::endl;
 
-    cout << "-------------------end_to_end_test-------------------\n";
-    end_to_end_test();
+    // std::cout << "-------------------end_to_end_test-------------------\n";
+    // end_to_end_test();
 
     // big_test();
 }
