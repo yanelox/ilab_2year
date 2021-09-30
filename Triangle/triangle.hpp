@@ -166,6 +166,38 @@ int triangle_::print (int tab_number) const
     return 0;
 }
 
+int triangle_::print (int tab_number, int index) const
+{
+    tab_func (tab_number);
+
+    std::cout << "triangle_" << index << std::endl;
+
+    tab_func (tab_number);
+
+    std::cout << "{\n";
+
+    tab_func (tab_number);
+
+    std::cout << "a = ";
+    a.print(tab_number + 1);
+
+    tab_func (tab_number);
+
+    std::cout << "b = ";
+    b.print(tab_number + 1);
+
+    tab_func (tab_number);
+
+    std::cout << "c = ";
+    c.print(tab_number + 1);
+
+    tab_func (tab_number);
+
+    std::cout << "}\n";
+
+    return 0;
+}
+
 
 //surface
 
@@ -490,20 +522,17 @@ int node_::make_childs ()
     return 0;
 }
 
-int node_::push (const triangle_ &t) 
+int node_::push (const triangle_ &t, int i) 
 {
     int tmp = p.contain_tr (t);
     
     if (tmp == -1)
-    {
-        // std::cout << -1;
         return -1;
-    }
 
     else if (tmp == 8)
     {
-        // std::cout << 8;
-        t_.push_back(t);
+        T_.push_back  (t);
+        I_.push_back (i);
     }
 
     else
@@ -513,7 +542,7 @@ int node_::push (const triangle_ &t)
 
         make_childs ();
          
-        /*std::cout <<*/ nodes[tmp].push (t);
+        nodes[tmp].push (t, i);
     }
 
     return 0;
@@ -539,8 +568,8 @@ int node_::print (int tab_number) const
 
     std::cout << "{\n";
 
-    for (auto i:t_)
-        i.print(tab_number + 2);
+    for (int i = 0; i < T_.size(); ++i)
+        T_[i].print(tab_number + 2, I_[i]);
 
     tab_func (tab_number + 1);
 
@@ -581,7 +610,7 @@ int node_::print (int tab_number) const
 //tree
 
 
-int my_tree::fill_tree (const triangle_ *t, int n)
+int my_tree::fill_tree (std::vector <triangle_> &t, int n)
 {
     double init[6];
     double tmp[6];
@@ -612,14 +641,14 @@ int my_tree::fill_tree (const triangle_ *t, int n)
              init[5] - 1, init[4] + 1};
 
     for (int i = 0; i < n; ++i)
-        push (t[i]);
+        push (t[i], i);
 
     return 0;
 }
 
-int my_tree::push (const triangle_ &t)
+int my_tree::push (const triangle_ &t, int i)
 {
-    return top.push (t);
+    return top.push (t, i);
 }
 
 int my_tree::print () const
@@ -636,10 +665,77 @@ int my_tree::print () const
 
 //solution
 
-
-void solution (const my_tree &Tree)
+std::set <int> my_tree::start_sol () const
 {
-    ;
+    std::set <int> res;
+
+    top.main_step (res);
+
+    return res;
+}
+
+int node_::main_step (std::set <int> &res) const
+{
+    for (int i = 0; i < T_.size(); ++i)
+        if (res.find (I_[i]) == res.end())
+            for (int j = 0; j < T_.size(); ++j)
+                if (i != j and T_[i].trl_intersect (T_[j]))
+                {
+                    res.insert (I_[i]);
+                    res.insert (I_[j]);
+                    break;
+                }
+
+    if (nodes != nullptr)
+    {
+        for (int i = 0; i < T_.size(); ++i)
+                for (int j = 0; j < 8; ++j)
+                    nodes[j].step_sol (T_[i], I_[i], res);
+
+        for (int i = 0; i < 8; ++i)
+            nodes[i].main_step(res);
+    }
+
+    return 0;   
+}
+
+int node_::step_sol (const triangle_ &t, const int i, std::set <int> &res) const
+{
+    if (!t.is_valid())
+        return -1;
+
+    for (int j = 0; j < T_.size(); ++j)
+        if (T_[j].trl_intersect (t) or t.trl_intersect(T_[j]))
+        {
+            res.insert (i);
+            res.insert (I_[j]);
+
+            return 1;
+        }
+        
+    if (nodes != nullptr)
+        for (int j = 0; j < 8; ++j)
+            if (nodes[j].step_sol (t, i, res) == 1)
+                return 1;
+
+    return 0;
+}
+
+std::set <int> triv_sol (std::vector <triangle_> &t, const int size)
+{
+    std::set <int> res;
+
+    for (int i = 0; i < t.size(); ++i)
+        if (res.find (i) == res.end())
+            for (int j = 0; j < t.size(); ++j)
+                if (i != j and t[i].trl_intersect (t[j]))
+                {
+                    res.insert (i);
+                    res.insert (j);
+                    break;
+                }
+
+    return res;
 }
 
 //func for printing

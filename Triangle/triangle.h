@@ -161,6 +161,8 @@ class triangle_
     bool trl_intersect (const triangle_ &t) const;
 
     int print (int tab_number) const;
+
+    int print (int tab_number, int index) const;
 };
 
 
@@ -356,15 +358,18 @@ class node_
 
     node_ *nodes;
 
-    std::vector <triangle_> t_;
+    std::vector <triangle_> T_;
 
-    node_ (): nodes{nullptr}, p{}, t_{} {};
+    std::vector <int> I_;
+
+    node_ (): nodes{nullptr}, p{}, T_{}, I_{} {};
 
     node_ (double x1, double x2,
            double y1, double y2,
-           double z1, double z2): nodes{nullptr}, p{x1, x2, y1, y2, z1, z2}, t_{} {};
+           double z1, double z2): nodes{nullptr}, p{x1, x2, y1, y2, z1, z2}, 
+                                                  T_{}, I_{} {};
                                 
-    node_ (const prlppd_ &P): nodes{nullptr}, p{P}, t_{} {};
+    node_ (const prlppd_ &P): nodes{nullptr}, p{P}, T_{}, I_{} {};
 
     ~node_ ()
     {
@@ -376,7 +381,11 @@ class node_
 
     int make_childs ();
 
-    int push (const triangle_ &t);
+    int push (const triangle_ &t, int i);
+
+    int main_step (std::set <int> &res) const;
+
+    int step_sol (const triangle_ &t, const int i, std::set <int> &res) const;
 
     int print (int tab_number) const;
 };
@@ -397,13 +406,16 @@ class my_tree
 
     ~my_tree () {};
 
-    int fill_tree (const triangle_ *t, int n);
+    int fill_tree (std::vector <triangle_> &t, int n);
 
-    int push (const triangle_ &t);
+    int push (const triangle_ &t, int i);
+
+    std::set <int> start_sol () const;
 
     int print () const;
 };
 
-
     int tab_func (int tab_number);
+
+    std::set <int> triv_sol (std::vector <triangle_> &t, const int size);
 }

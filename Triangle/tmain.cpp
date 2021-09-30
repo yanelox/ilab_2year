@@ -22,8 +22,8 @@ int main ()
     line_segment_test();
     std::cout << std::endl;
 
-    // std::cout << "-------------------end_to_end_test-------------------\n";
-    // end_to_end_test();
+    std::cout << "-------------------end_to_end_test-------------------\n";
+    end_to_end_test();
 
     // big_test();
 }

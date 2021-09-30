@@ -84,42 +84,54 @@ void line_segment_test ()
     d.print(0);
 }
 
-// void end_to_end_test ()
-// {
-//     std::vector <geom::triangle_> a(10);
+void end_to_end_test ()
+{
+    std::vector <geom::triangle_> a(10);
 
-//     int res[] = {0, 1, 2, 3, 4, 5};
+    int res[] = {0, 1, 2, 3, 4, 5};
 
-//     a[0] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
-//     a[1] = {{2, 0, 0}, {0, 2, 0}, {0, 0, 2}};
-//     a[2] = {{0, 0, 0}, {0, 1, 1}, {1, 1, 2}};
-//     a[3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
-//     a[4] = {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}};
-//     a[5] = {{0, 0, 0}, {0, 0, -1}, {1, 0, -1}};
-//     a[6] = {{0, 0, 7}, {1, 0, 7}, {0, 1, 7}};
+    a[0] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+    a[1] = {{2, 0, 0}, {0, 2, 0}, {0, 0, 2}};
+    a[2] = {{0, 0, 0}, {0, 1, 1}, {1, 1, 2}};
+    a[3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+    a[4] = {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}};
+    a[5] = {{0, 0, 0}, {0, 0, -1}, {1, 0, -1}};
+    a[6] = {{0, 0, 7}, {1, 0, 7}, {0, 1, 7}};
 
-//     std::cout << "programm answers:" << std::endl;
+    geom::my_tree Tree;
+    Tree.fill_tree (a, 7);
 
-//     geom::solution (a, 7);
+    std::cout << "programm answers:" << std::endl;
 
-//     std::cout << "true answers:" << std::endl;
+    std::set <int> res_ =  Tree.start_sol();
 
-//     for (auto i:res)
-//         std::cout << i << std::endl;
-// }
+    for (auto i:res_)
+        std::cout << i << std::endl;
 
-// void big_test ()
-// {
-//     int size = 100000;
+    std::cout << "true answers:" << std::endl;
 
-//     std::vector <geom::triangle_> t(size);
+    for (auto i:res)
+        std::cout << i << std::endl;
+}
 
-//     for (int i = 0; i < size; ++i)
-//     {
-//         t[i].a = {(double) (rand() % 200 - 100), (double) (rand() % 200 - 100), (double) (rand() % 200 - 100)};
-//         t[i].b = {(double) (rand() % 200 - 100), (double) (rand() % 200 - 100), (double) (rand() % 200 - 100)};
-//         t[i].c = {(double) (rand() % 200 - 100), (double) (rand() % 200 - 100), (double) (rand() % 200 - 100)};
-//     }
+void big_test ()
+{
+    int size = 100000;
 
-//     geom::solution (t, size);
-// }
+    std::vector <geom::triangle_> t(size);
+
+    for (int i = 0; i < size; ++i)
+    {
+        t[i].a = {(double) (rand() % 200 - 100), (double) (rand() % 200 - 100), (double) (rand() % 200 - 100)};
+        t[i].b = {(double) (rand() % 200 - 100), (double) (rand() % 200 - 100), (double) (rand() % 200 - 100)};
+        t[i].c = {(double) (rand() % 200 - 100), (double) (rand() % 200 - 100), (double) (rand() % 200 - 100)};
+    }
+
+    geom::my_tree Tree;
+    Tree.fill_tree (t, size);
+
+    std::set <int> res =  Tree.start_sol();
+
+    for (auto i:res)
+        std::cout << i << std::endl;
+}
