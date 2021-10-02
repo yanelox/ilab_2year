@@ -7,7 +7,7 @@ int main ()
 
     std::cout << n << std::endl;
 
-    for (int i = 0; i < n; ++i)
+    for (int i = 0; i < 9 * n; ++i)
     {
         tmp = rand();
 
