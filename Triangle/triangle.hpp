@@ -541,15 +541,22 @@ int node_::push (const triangle_ &t, int i)
             nodes = new node_ [8];
 
         make_childs ();
-         
+        
         nodes[tmp].push (t, i);
     }
 
     return 0;
 }
 
-int node_::print (int tab_number) const
+int node_::print (int tab_number, int node_number) const
 {
+    if (T_.empty() and nodes == nullptr)
+        return 0;
+    
+    tab_func (tab_number);
+
+    std::cout << std::bitset <3> (node_number) << std::endl;
+
     tab_func (tab_number);
 
     std::cout << "node:\n";
@@ -560,20 +567,23 @@ int node_::print (int tab_number) const
 
     p.print(tab_number + 1);
 
-    tab_func (tab_number + 1);
+    if (!T_.empty())
+    {
+        tab_func (tab_number + 1);
 
-    std::cout << "triangle vector\n";
+        std::cout << "triangle vector\n";
 
-    tab_func (tab_number + 1);
+        tab_func (tab_number + 1);
 
-    std::cout << "{\n";
+        std::cout << "{\n";
 
-    for (int i = 0; i < T_.size(); ++i)
-        T_[i].print(tab_number + 2, I_[i]);
+        for (int i = 0; i < T_.size(); ++i)
+            T_[i].print (tab_number + 2, I_[i]);
 
-    tab_func (tab_number + 1);
+        tab_func (tab_number + 1);
 
-    std::cout << "}\n";
+        std::cout << "}\n";
+    }
 
     if (nodes != nullptr)
     {
@@ -586,13 +596,7 @@ int node_::print (int tab_number) const
         std::cout << "{\n";
 
         for (int i = 0; i < 8; ++i)
-        {   
-            tab_func (tab_number + 2);
-
-            std::cout << std::bitset <3> (i) << std::endl;
-
-            nodes[i].print(tab_number + 2);
-        }
+            nodes[i].print(tab_number + 2, i);
 
         tab_func (tab_number + 1);
 
@@ -635,7 +639,7 @@ int my_tree::fill_tree (std::vector <triangle_> &t, int n)
                 init[2 * j + 1] = std::min (init[2 * j + 1], tmp[2 * j + 1]);
             }
     }
-
+    
     top.p = {init[1] - 1, init[0] + 1, 
              init[3] - 1, init[2] + 1, 
              init[5] - 1, init[4] + 1};
@@ -655,7 +659,7 @@ int my_tree::print () const
 {
     std::cout << "tree:\n{\n";
 
-    top.print(1);
+    top.print(1, 0);
 
     std::cout << "}\n";
 
@@ -709,14 +713,12 @@ int node_::step_sol (const triangle_ &t, const int i, std::set <int> &res) const
         {
             res.insert (i);
             res.insert (I_[j]);
-
-            return 1;
         }
         
     if (nodes != nullptr)
         for (int j = 0; j < 8; ++j)
-            if (nodes[j].step_sol (t, i, res) == 1)
-                return 1;
+            nodes[j].step_sol (t, i, res);
+                
 
     return 0;
 }

@@ -387,7 +387,7 @@ class node_
 
     int step_sol (const triangle_ &t, const int i, std::set <int> &res) const;
 
-    int print (int tab_number) const;
+    int print (int tab_number, int node_number) const;
 };
 
 
