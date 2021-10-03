@@ -24,6 +24,14 @@ enum mutual_loc
     IS_CONTENTS     = 5
 };
 
+enum triangle_stat
+{
+    IS_NAN      = 0, //contain NAN vectors
+    IS_VALID    = 1,
+    IS_POINT    = 2,
+    IS_LINES    = 3 //line segment
+};
+
 
 class vector_
 {
@@ -84,6 +92,8 @@ class vector_
     }
 
     bool is_equal (const vector_ &an_vec) const;
+
+    bool is_zero () const;
 
     bool is_valid () const;
 
@@ -154,7 +164,7 @@ class triangle_
         c = other.c;
     }
 
-    bool is_valid () const;
+    triangle_stat is_valid () const;
 
     bool contain_vec (const vector_ &v) const;
 
@@ -297,6 +307,8 @@ class line_segment_
     ~line_segment_ () {};
 
     bool is_valid () const;
+
+    bool is_intersect (const line_segment_ &ls) const;
 
     mutual_loc sur_intersect (const surface_ &s) const;
 

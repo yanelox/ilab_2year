@@ -14,6 +14,10 @@ bool d_equal (double x, double y)
 
 //vector
 
+bool vector_::is_zero () const
+{
+    return d_equal(x, 0) and d_equal (y, 0) and d_equal (z, 0);
+}
 
 bool vector_::is_valid () const
 {
@@ -93,15 +97,47 @@ int line_::print (int tab_number) const
 //triangle
 
 
-bool triangle_::is_valid () const
+triangle_stat triangle_::is_valid () const
 {
-    return a.is_valid() and b.is_valid() and c.is_valid();
+    if (!a.is_valid() or !b.is_valid() or !c.is_valid())
+        return IS_NAN;
+
+    if (a.is_equal (b) and b.is_equal(c))
+        return IS_POINT;
+
+    if (((a - b) * (a - c)).is_zero())
+        return IS_LINES;
+
+    return IS_VALID;
 }
 
 bool triangle_::contain_vec (const vector_ &v) const
 {
-    if (!v.is_valid() or !this->is_valid())
+    if (!v.is_valid())
         return false;
+
+    switch (is_valid())
+    {
+        case IS_NAN:
+            return false;
+        
+        case IS_POINT:
+            return a.is_equal (v);
+
+        case IS_LINES:
+            if ((a.is_equal(b) or b.is_equal(c)) and ((a - v) * (c - v)).is_zero())
+                return true;
+
+            else if (a.is_equal(c) and ((a - v) * (b - v)).is_zero())
+                return true;
+
+            else
+                return false;
+
+        default:
+            break;
+    }
+
     
     double a1, a2, a3;
     
@@ -122,16 +158,55 @@ bool triangle_::contain_vec (const vector_ &v) const
 
 bool triangle_::trl_intersect (const triangle_ &t) const
 {
-    if (!t.is_valid() or !this->is_valid())
+    triangle_stat tmp1 = t.is_valid(), tmp2 = is_valid();
+
+    if (tmp1 == IS_NAN or tmp2 == IS_NAN)
         return false;
+
+    if (tmp1 == IS_POINT and tmp2 == IS_POINT)
+        return t.a.is_equal(a);
+
+    if (tmp1 == IS_POINT and tmp2 == IS_LINES)
+        return contain_vec (t.a);
+
+    if (tmp1 == IS_LINES and tmp2 == IS_POINT)
+        return t.contain_vec (a);
+
+    if (tmp1 == IS_LINES and tmp2 == IS_LINES)
+    {
+        vector_ v1 = a, v2, v3 = t.a, v4;
+
+        if (a.is_equal(b))
+            v2 = c;
+
+        else
+            v2 = b;
+
+        if (t.a.is_equal(t.b))
+            v4 = t.c;
+
+        else
+            v4 = t.b;
+
+        line_segment_ ls1 = {v1, v2}, ls2 = {v3, v4};
+
+        return ls1.is_intersect (ls2);
+    }
     
-    surface_ s {t.a, t.b, t.c};
+    surface_ s1 {t.a, t.b, t.c};
+
+    surface_ s11 {a, b, c};
 
     line_segment_ a1 {a, b}, a2 {b, c}, a3 {c, a};
+
+    line_segment_ a11 {t.a, t.b}, a21 {t.b, t.c}, a31 {t.c, t.a};
    
-    vector_ res1 = a1.sur_its_loc (s), res2 = a2.sur_its_loc (s), res3 = a3.sur_its_loc (s);
+    vector_ res1 = a1.sur_its_loc (s1), res2 = a2.sur_its_loc (s1), res3 = a3.sur_its_loc (s1);
     
-    return t.contain_vec (res1) or t.contain_vec (res2) or t.contain_vec (res3);
+    vector_ res11 = a11.sur_its_loc (s11), res21 = a21.sur_its_loc (s11), res31 = a31.sur_its_loc (s11);
+
+    return t.contain_vec (res1) or t.contain_vec (res2) or t.contain_vec (res3) or
+           this->contain_vec (res11) or this->contain_vec (res21) or this->contain_vec (res31);
 }
 
 int triangle_::print (int tab_number) const
@@ -323,6 +398,14 @@ int surface_::print (int tab_number) const
 
 //line segment
 
+bool line_segment_::is_intersect (const line_segment_ &ls) const
+{
+    vector_ v1 = a - b, v2 = ls.a - ls.b, v3 = a - ls.a;
+
+    double res = (v1 * v2) ^ v3;
+
+    return d_equal(res, 0);
+}
 
 bool line_segment_::is_valid () const
 {
@@ -525,17 +608,19 @@ int node_::make_childs ()
 int node_::push (const triangle_ &t, int i) 
 {
     int tmp = p.contain_tr (t);
+
+    triangle_stat tr_stat = t.is_valid();
     
     if (tmp == -1)
         return -1;
 
     else if (tmp == 8)
     {
-        T_.push_back  (t);
+        T_.push_back (t);
         I_.push_back (i);
     }
 
-    else
+    else if (tr_stat != IS_POINT)
     {
         if (nodes == nullptr)
             nodes = new node_ [8];
@@ -543,6 +628,18 @@ int node_::push (const triangle_ &t, int i)
         make_childs ();
         
         nodes[tmp].push (t, i);
+    }
+
+    else
+    {
+        if (nodes == nullptr)
+        {
+            T_.push_back (t);
+            I_.push_back (i);
+        }
+
+        else
+            nodes[tmp].push (t, i);
     }
 
     return 0;
@@ -616,6 +713,9 @@ int node_::print (int tab_number, int node_number) const
 
 int my_tree::fill_tree (std::vector <triangle_> &t, int n)
 {
+    std::vector <triangle_> t1;
+    std::vector <int>       i1;
+
     double init[6];
     double tmp[6];
 
@@ -645,7 +745,24 @@ int my_tree::fill_tree (std::vector <triangle_> &t, int n)
              init[5] - 1, init[4] + 1};
 
     for (int i = 0; i < n; ++i)
-        push (t[i], i);
+    {
+        triangle_stat tr_stat = t[i].is_valid();
+
+        if (tr_stat == IS_NAN)
+            std::cout << "wrong triangle " << i << std::endl;
+
+        else if (tr_stat == IS_POINT)
+        {
+            t1.push_back (t[i]);
+            i1.push_back (i);
+        }
+
+        else
+            push (t[i], i);
+    }
+
+    for (int i = 0; i < t1.size(); ++i)
+        push (t1[i], i1[i]);
 
     return 0;
 }
@@ -682,8 +799,8 @@ int node_::main_step (std::set <int> &res) const
 {
     for (int i = 0; i < T_.size(); ++i)
         if (res.find (I_[i]) == res.end())
-            for (int j = 0; j < T_.size(); ++j)
-                if (i != j and T_[i].trl_intersect (T_[j]))
+            for (int j = i + 1; j < T_.size(); ++j)
+                if (T_[i].trl_intersect (T_[j]))
                 {
                     res.insert (I_[i]);
                     res.insert (I_[j]);
@@ -709,7 +826,7 @@ int node_::step_sol (const triangle_ &t, const int i, std::set <int> &res) const
         return -1;
 
     for (int j = 0; j < T_.size(); ++j)
-        if (T_[j].trl_intersect (t) or t.trl_intersect(T_[j]))
+        if (T_[j].trl_intersect (t))
         {
             res.insert (i);
             res.insert (I_[j]);
@@ -729,8 +846,8 @@ std::set <int> triv_sol (std::vector <triangle_> &t, const int size)
 
     for (int i = 0; i < t.size(); ++i)
         if (res.find (i) == res.end())
-            for (int j = 0; j < t.size(); ++j)
-                if (i != j and t[i].trl_intersect (t[j]))
+            for (int j = i + 1; j < t.size(); ++j)
+                if (t[i].trl_intersect (t[j]))
                 {
                     res.insert (i);
                     res.insert (j);
