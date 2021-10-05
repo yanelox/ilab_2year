@@ -8,7 +8,7 @@ bool d_equal (double x, double y)
 {
     double acc = 0.00001;
 
-    return abs (x - y) < acc;
+    return std::abs (x - y) < acc;
 }
 
 
@@ -115,7 +115,7 @@ bool triangle_::contain_vec (const vector_ &v) const
 {
     if (!v.is_valid())
         return false;
-
+    
     switch (is_valid())
     {
         case IS_NAN:
@@ -137,7 +137,6 @@ bool triangle_::contain_vec (const vector_ &v) const
         default:
             break;
     }
-
     
     double a1, a2, a3;
     
@@ -145,7 +144,7 @@ bool triangle_::contain_vec (const vector_ &v) const
 
     if (d_equal(0, r1.mod()) or d_equal(0, r2.mod()) or d_equal(0, r3.mod()))
         return true;
-
+    
     a1 = acos ((r1 ^ r2) / (r1.mod() * r2.mod()));
     a2 = acos ((r2 ^ r3) / (r2.mod() * r3.mod()));
     a3 = acos ((r3 ^ r1) / (r3.mod() * r1.mod()));
@@ -204,7 +203,7 @@ bool triangle_::trl_intersect (const triangle_ &t) const
     vector_ res1 = a1.sur_its_loc (s1), res2 = a2.sur_its_loc (s1), res3 = a3.sur_its_loc (s1);
     
     vector_ res11 = a11.sur_its_loc (s11), res21 = a21.sur_its_loc (s11), res31 = a31.sur_its_loc (s11);
-
+    
     return t.contain_vec (res1) or t.contain_vec (res2) or t.contain_vec (res3) or
            this->contain_vec (res11) or this->contain_vec (res21) or this->contain_vec (res31);
 }
@@ -798,13 +797,11 @@ std::set <int> my_tree::start_sol () const
 int node_::main_step (std::set <int> &res) const
 {
     for (int i = 0; i < T_.size(); ++i)
-        if (res.find (I_[i]) == res.end())
             for (int j = i + 1; j < T_.size(); ++j)
                 if (T_[i].trl_intersect (T_[j]))
                 {
                     res.insert (I_[i]);
                     res.insert (I_[j]);
-                    break;
                 }
 
     if (nodes != nullptr)
