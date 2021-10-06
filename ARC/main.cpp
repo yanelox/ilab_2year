@@ -30,7 +30,7 @@ int main ()
 
     std::cout << res << std::endl;
 
-    cache.print();
+    // cache.print();
 
     return 0;
 }
