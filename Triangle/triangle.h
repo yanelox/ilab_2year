@@ -8,7 +8,7 @@
 #include <vector>
 #include <set>
 
-namespace geom
+namespace geom //TODO: fix destruct
 {
 bool d_equal (double x, double y);
 

@@ -6,16 +6,14 @@
 #include <list>
 #include <unordered_map>
 
-using namespace std;
-
 #define my_print(n)                     \
                                         \
-    cout << "-\n" << #n << ": ";        \
+    std::cout << "-\n" << #n << ": ";   \
                                         \
     for (auto i: n)                     \
-        cout << i << " ";               \
+        std::cout << i << " ";          \
                                         \
-    cout << "\n-\n";        
+    std::cout << "\n-\n";        
 
 
 enum source_list
@@ -47,12 +45,12 @@ class ARC
 {
     private:
 
-    list <T> T1 = {};
-    list <T> T2 = {};
-    list <T> B1 = {};
-    list <T> B2 = {};
+    std::list <T> T1 = {};
+    std::list <T> T2 = {};
+    std::list <T> B1 = {};
+    std::list <T> B2 = {};
 
-    unordered_map <T, my_iterator_ <T>> map = {};
+    std::unordered_map <T, my_iterator_ <T>> map = {};
 
     unsigned long c_size = 5; //max size of L1 and L2 (L1 = T1 + B1, L2 = T2 + B2)
     unsigned long p_size = 0;

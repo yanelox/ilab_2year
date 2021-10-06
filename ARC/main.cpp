@@ -5,8 +5,6 @@
 
 #include "ARC.hpp"
 
-using namespace std;
-
 int main ()
 {
     ARC <int> cache;
@@ -15,16 +13,16 @@ int main ()
 
     long int res = 0;
 
-    cin >> n;
+    std::cin >> n;
 
-    while(n)
+    for (int i = 0; i < n ;++i)
     {
-        cin >> n;
+        std::cin >> n;
 
         res += cache.push(n);
     }           
 
-    cout << res << endl;
+    std::cout << res << std::endl;
 
     return 0;
 }
