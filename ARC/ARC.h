@@ -30,7 +30,7 @@ struct my_iterator_
 {
     private:
 
-    using list_it = typename list <T>::iterator;
+    using list_it = typename std::list <T>::iterator;
 
     public:
 
@@ -43,7 +43,7 @@ struct my_iterator_
 template <typename T> 
 class ARC
 {
-    private:
+    public:
 
     std::list <T> T1 = {};
     std::list <T> T2 = {};
@@ -64,6 +64,8 @@ class ARC
     int replace (bool inB2);
 
     public:
+
+    ARC (unsigned long C): c_size(C) {};
 
     int push (T n);
 

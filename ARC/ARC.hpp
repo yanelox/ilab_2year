@@ -55,7 +55,7 @@ int ARC <T>::push (T n)
             case4_2 (inB2);
 
         T1.push_front(n);
-        map.insert({n, {T1.begin(), source_list::T1}});
+        map[n] = {T1.begin(), source_list::T1};
     }
 
     return ret_value;
@@ -83,9 +83,9 @@ template <typename T>
 int ARC <T>::case2 (my_iterator_ <T> n, bool inB2)
 {
     T page = *(n.pointer);
-
-    p_size = min <size_t> (c_size, p_size + max <size_t> (B2.size() / B1.size(),  1ul));
-
+    
+    p_size = std::min <int> (c_size, p_size + std::max <int> (B2.size() / B1.size(),  1));
+   
     replace(inB2);
 
     B1.erase(n.pointer);
@@ -101,9 +101,9 @@ template <typename T>
 int ARC <T>::case3 (my_iterator_ <T> n, bool inB2)
 {
     T page = *(n.pointer);
-
-    p_size = max <size_t> (0ul, p_size - max <size_t> ( B1.size() / B2.size(), 1ul));
-
+    
+    p_size = std::max <int> (0, p_size - std::max <int> ( B1.size() / B2.size(), 1));
+    
     replace(inB2);
 
     B2.erase(n.pointer);
@@ -163,7 +163,7 @@ int ARC <T>::case4_2 (bool inB2)
 template <typename T>
 int ARC <T>::replace (bool inB2)
 {
-    T swap_var = 0;
+    T swap_var {};
 
     if (T1.size() >= 1 and ((inB2 and T1.size() == p_size) or 
         T1.size() > p_size))
@@ -176,7 +176,7 @@ int ARC <T>::replace (bool inB2)
 
         map[swap_var] = {B1.begin(), source_list::B1};
     }
-
+    
     else
     {
         swap_var = T2.back();
@@ -185,7 +185,7 @@ int ARC <T>::replace (bool inB2)
 
         B2.push_front(swap_var);
 
-        map[swap_var] = {B2.begin(), source_list::B1};
+        map[swap_var] = {B2.begin(), source_list::B2};
     }
 
     return 0;
@@ -194,6 +194,9 @@ int ARC <T>::replace (bool inB2)
 template <typename T>
 int ARC <T>::print ()
 {
+    std::cout << "c = " << c_size << std::endl;
+    std::cout << "p = " << p_size << std::endl;
+
     my_print(T1);
     my_print(T2);
     my_print(B1);
