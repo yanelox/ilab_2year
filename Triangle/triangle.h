@@ -33,14 +33,14 @@ enum triangle_stat
 };
 
 
-class vector_
+struct vector_
 {
     public:
 
     double x, y, z;
 
     vector_ (): x{NAN}, y{NAN}, z{NAN} {}
-    vector_  (double X, double Y, double Z): x(X), y(Y), z(Z) {}
+    vector_ (double X, double Y, double Z): x(X), y(Y), z(Z) {}
 
     ~vector_ ()
     {
@@ -110,9 +110,8 @@ class line_
     vector_ r, a;
 
     line_ (): r{}, a{} {}
-    line_ (const vector_ &R, const vector_ &A): r(R), a(A) {}
 
-    ~line_ () {}
+    line_ (const vector_ &R, const vector_ &A): r(R), a(A) {}
 
     line_ &operator = (const line_ &other)
     {
@@ -144,9 +143,8 @@ class triangle_
     vector_ a, b, c;
 
     triangle_ (): a{}, b{}, c{} {}
-    triangle_ (const vector_ &A, const vector_ &B, const vector_ &C): a(A), b(B), c(C) {}
 
-    ~triangle_ () {}
+    triangle_ (const vector_ &A, const vector_ &B, const vector_ &C): a(A), b(B), c(C) {}
 
     triangle_ &operator = (const triangle_ &other)
     {
@@ -259,14 +257,6 @@ class surface_
         }
     }
 
-    ~surface_ ()
-    {
-        a = NAN;
-        b = NAN;
-        c = NAN;
-        d = NAN;
-    }
-
     surface_ &operator = (const surface_ &other)
     {
         a = other.a;
@@ -301,10 +291,9 @@ class line_segment_
 
     vector_ a, b;
 
-    line_segment_ (): a{}, b{} {};
-    line_segment_ (const vector_ &A, const vector_ &B): a{A}, b{B} {};
+    line_segment_ (): a{}, b{} {}
 
-    ~line_segment_ () {};
+    line_segment_ (const vector_ &A, const vector_ &B): a{A}, b{B} {};
 
     bool is_valid () const;
 
@@ -368,26 +357,20 @@ class node_
 
     prlppd_ p;
 
-    node_ *nodes;
+    std::vector <node_> nodes;
 
     std::vector <triangle_> T_;
 
     std::vector <int> I_;
 
-    node_ (): nodes{nullptr}, p{}, T_{}, I_{} {};
+    node_ (): nodes{}, p{}, T_{}, I_{} {};
 
     node_ (double x1, double x2,
            double y1, double y2,
-           double z1, double z2): nodes{nullptr}, p{x1, x2, y1, y2, z1, z2}, 
+           double z1, double z2): nodes{}, p{x1, x2, y1, y2, z1, z2}, 
                                                   T_{}, I_{} {};
                                 
-    node_ (const prlppd_ &P): nodes{nullptr}, p{P}, T_{}, I_{} {};
-
-    ~node_ ()
-    {
-        if (nodes != nullptr)
-            delete[] nodes;
-    };
+    node_ (const prlppd_ &P): nodes{}, p{P}, T_{}, I_{} {};
 
     bool is_valid ();
 
@@ -414,9 +397,6 @@ class my_tree
     my_tree (double x1, double x2, 
              double y1, double y2, 
              double z1, double z2): top {x1, x2, y1, y2, z1, z2} {};
-    
-
-    ~my_tree () {};
 
     int fill_tree (std::vector <triangle_> &t, int n);
 

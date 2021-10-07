@@ -4,7 +4,7 @@ int main ()
 {
     int n;
     std::vector <geom::triangle_> T;
-    double data[9];
+    std::vector <geom::vector_> V(3);
 
     std::set <int> res1, res2;
 
@@ -14,12 +14,10 @@ int main ()
 
     for (int i = 0; i < n; ++i)
     {  
-        for (int j = 0; j < 9; ++j)
-            std::cin >> data[j];
+        for (int j = 0; j < 3; ++j)
+            std::cin >> V[j].x >> V[j].y >> V[j].z;
 
-        T.push_back ({{data[0], data[1], data[2]},
-                      {data[3], data[4], data[5]},
-                      {data[6], data[7], data[8]}});
+        T.push_back ({V[0], V[1], V[2]});
     }
 
     Tree.fill_tree(T, n);

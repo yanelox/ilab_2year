@@ -586,19 +586,20 @@ bool node_::is_valid ()
 
 int node_::make_childs ()
 {
-    if (nodes == nullptr)
-        return -1;
+    node_ tmp;
 
     for (int i = 0; i < 8; ++i)
     {
-        nodes[i].p.x1 = p.x1 + ((i & 4) != 0) * (p.x2 - p.x1) / 2;
-        nodes[i].p.x2 = (p.x1 + p.x2) / 2 + ((i & 4) != 0) * (p.x2 - p.x1) / 2;
+        tmp.p.x1 = p.x1 + ((i & 4) != 0) * (p.x2 - p.x1) / 2;
+        tmp.p.x2 = (p.x1 + p.x2) / 2 + ((i & 4) != 0) * (p.x2 - p.x1) / 2;
 
-        nodes[i].p.y1 = p.y1 + ((i & 2) != 0) * (p.y2 - p.y1) / 2;
-        nodes[i].p.y2 = (p.y1 + p.y2) / 2 + ((i & 2) != 0) * (p.y2 - p.y1) / 2;
+        tmp.p.y1 = p.y1 + ((i & 2) != 0) * (p.y2 - p.y1) / 2;
+        tmp.p.y2 = (p.y1 + p.y2) / 2 + ((i & 2) != 0) * (p.y2 - p.y1) / 2;
 
-        nodes[i].p.z1 = p.z1 + ((i & 1) != 0) * (p.z2 - p.z1) / 2;
-        nodes[i].p.z2 = (p.z1 + p.z2) / 2 + ((i & 1) != 0) * (p.z2 - p.z1) / 2;
+        tmp.p.z1 = p.z1 + ((i & 1) != 0) * (p.z2 - p.z1) / 2;
+        tmp.p.z2 = (p.z1 + p.z2) / 2 + ((i & 1) != 0) * (p.z2 - p.z1) / 2;
+    
+        nodes.push_back(tmp);
     }
 
     return 0;
@@ -621,9 +622,6 @@ int node_::push (const triangle_ &t, int i)
 
     else if (tr_stat != IS_POINT)
     {
-        if (nodes == nullptr)
-            nodes = new node_ [8];
-
         make_childs ();
         
         nodes[tmp].push (t, i);
@@ -631,7 +629,7 @@ int node_::push (const triangle_ &t, int i)
 
     else
     {
-        if (nodes == nullptr)
+        if (nodes.empty())
         {
             T_.push_back (t);
             I_.push_back (i);
@@ -646,7 +644,7 @@ int node_::push (const triangle_ &t, int i)
 
 int node_::print (int tab_number, int node_number) const
 {
-    if (T_.empty() and nodes == nullptr)
+    if (T_.empty() and nodes.empty())
         return 0;
     
     tab_func (tab_number);
@@ -681,7 +679,7 @@ int node_::print (int tab_number, int node_number) const
         std::cout << "}\n";
     }
 
-    if (nodes != nullptr)
+    if (!nodes.empty())
     {
         tab_func (tab_number + 1);
 
@@ -715,33 +713,40 @@ int my_tree::fill_tree (std::vector <triangle_> &t, int n)
     std::vector <triangle_> t1;
     std::vector <int>       i1;
 
-    double init[6];
-    double tmp[6];
+    geom::vector_ vmax, vmin;
+    geom::vector_ tmp_max, tmp_min;
 
     for (int i = 0; i < n; ++i)
     {
-        tmp[0] = std::max (t[i].a.x, std::max (t[i].b.x, t[i].c.x));
-        tmp[1] = std::min (t[i].a.x, std::min (t[i].b.x, t[i].c.x));
-        tmp[2] = std::max (t[i].a.y, std::max (t[i].b.y, t[i].c.y));
-        tmp[3] = std::min (t[i].a.y, std::min (t[i].b.y, t[i].c.y));
-        tmp[4] = std::max (t[i].a.z, std::max (t[i].b.z, t[i].c.z));
-        tmp[5] = std::min (t[i].a.z, std::min (t[i].b.z, t[i].c.z));
+        tmp_max.x = std::max (t[i].a.x, std::max (t[i].b.x, t[i].c.x));
+        tmp_max.y = std::max (t[i].a.y, std::max (t[i].b.y, t[i].c.y));
+        tmp_max.z = std::max (t[i].a.z, std::max (t[i].b.z, t[i].c.z));
 
+        tmp_min.x = std::min (t[i].a.x, std::min (t[i].b.x, t[i].c.x));
+        tmp_min.y = std::min (t[i].a.y, std::min (t[i].b.y, t[i].c.y));
+        tmp_min.z = std::min (t[i].a.z, std::min (t[i].b.z, t[i].c.z));
+    
         if (i == 0)
-            for (int j = 0; j < 6; ++j)
-                init[j] = tmp[j];
+        {
+            vmax = tmp_max;
+            vmin = tmp_min;
+        }
 
         else
-            for (int j = 0; j < 3; ++j)
-            {
-                init[2 * j] = std::max (init[2 * j], tmp[2 * j]);
-                init[2 * j + 1] = std::min (init[2 * j + 1], tmp[2 * j + 1]);
-            }
+        {
+            vmax.x = std::max (vmax.x, tmp_max.x);
+            vmax.y = std::max (vmax.y, tmp_max.y);
+            vmax.z = std::max (vmax.z, tmp_max.z);
+        
+            vmin.x = std::min (vmin.x, tmp_min.x);
+            vmin.y = std::min (vmin.y, tmp_min.y);
+            vmin.z = std::min (vmin.z, tmp_min.z);
+        }
     }
     
-    top.p = {init[1] - 1, init[0] + 1, 
-             init[3] - 1, init[2] + 1, 
-             init[5] - 1, init[4] + 1};
+    top.p = {vmin.x - 1, vmax.x + 1, 
+             vmin.y - 1, vmax.x + 1, 
+             vmin.z - 1, vmax.z + 1};
 
     for (int i = 0; i < n; ++i)
     {
@@ -804,7 +809,7 @@ int node_::main_step (std::set <int> &res) const
                     res.insert (I_[j]);
                 }
 
-    if (nodes != nullptr)
+    if (!nodes.empty())
     {
         for (int i = 0; i < T_.size(); ++i)
                 for (int j = 0; j < 8; ++j)
@@ -829,7 +834,7 @@ int node_::step_sol (const triangle_ &t, const int i, std::set <int> &res) const
             res.insert (I_[j]);
         }
         
-    if (nodes != nullptr)
+    if (!nodes.empty())
         for (int j = 0; j < 8; ++j)
             nodes[j].step_sol (t, i, res);
                 
