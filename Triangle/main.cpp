@@ -6,7 +6,7 @@ int main ()
     std::vector <geom::triangle_> T;
     std::vector <geom::vector_> V(3);
 
-    std::set <int> res1, res2;
+    std::set <int> res1;
 
     geom::my_tree Tree;
 
@@ -26,8 +26,8 @@ int main ()
     for (auto i:res1)
         std::cout << i << std::endl;
 
-    // res2 = geom::triv_sol (T, n);
-    // for (auto i:res2)
+    // res1 = geom::triv_sol (T, n);
+    // for (auto i:res1)
     //     std::cout << i << std::endl;
 
     // Tree.print();

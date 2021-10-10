@@ -8,7 +8,7 @@
 #include <vector>
 #include <set>
 
-namespace geom //TODO: fix destruct
+namespace geom
 {
 bool d_equal (double x, double y);
 
@@ -35,36 +35,10 @@ enum triangle_stat
 
 struct vector_
 {
-    public:
-
     double x, y, z;
 
     vector_ (): x{NAN}, y{NAN}, z{NAN} {}
     vector_ (double X, double Y, double Z): x(X), y(Y), z(Z) {}
-
-    ~vector_ ()
-    {
-        x = NAN;
-        y = NAN;
-        z = NAN;
-    }
-
-    vector_ &operator = (const vector_ &other)
-    {
-        x = other.x;
-        y = other.y;
-        z = other.z;
-
-        return *this;
-    }
-
-    vector_ (const vector_ &other)
-    {
-        x = other.x;
-        y = other.y;
-        z = other.z;
-    }
-
 
     vector_ operator + (const vector_ &other) const
     {
@@ -103,29 +77,13 @@ struct vector_
 };
 
 
-class line_
+struct line_
 {
-    public:
-
     vector_ r, a;
 
     line_ (): r{}, a{} {}
 
     line_ (const vector_ &R, const vector_ &A): r(R), a(A) {}
-
-    line_ &operator = (const line_ &other)
-    {
-        r = other.r;
-        a = other.a;
-
-        return *this;
-    }
-
-    line_ (const line_ &other)
-    {
-        r = other.r;
-        a = other.a;
-    }
 
     bool is_valid () const;
 
@@ -135,32 +93,13 @@ class line_
 };
 
 
-class triangle_
+struct triangle_
 {
-    
-    public:
-    
     vector_ a, b, c;
 
     triangle_ (): a{}, b{}, c{} {}
 
     triangle_ (const vector_ &A, const vector_ &B, const vector_ &C): a(A), b(B), c(C) {}
-
-    triangle_ &operator = (const triangle_ &other)
-    {
-        a = other.a;
-        b = other.b;
-        c = other.c;
-
-        return *this;
-    }
-
-    triangle_ (const triangle_ &other)
-    {
-        a = other.a;
-        b = other.b;
-        c = other.c;
-    }
 
     triangle_stat is_valid () const;
 
@@ -174,10 +113,8 @@ class triangle_
 };
 
 
-class surface_
+struct surface_
 {
-    public:
-
     double a, b, c, d;
 
     vector_ n, r;
@@ -257,24 +194,6 @@ class surface_
         }
     }
 
-    surface_ &operator = (const surface_ &other)
-    {
-        a = other.a;
-        b = other.b;
-        c = other.c;
-        d = other.d;
-
-        return *this;
-    }
-
-    surface_ (const surface_ &other)
-    {
-        a = other.a;
-        b = other.b;
-        c = other.c;
-        d = other.d;
-    }
-
     bool is_valid () const;
 
     mutual_loc sur_intersect (const surface_ &an_sur) const;
@@ -285,10 +204,8 @@ class surface_
 };
 
 
-class line_segment_
+struct line_segment_
 {
-    public:
-
     vector_ a, b;
 
     line_segment_ (): a{}, b{} {}
@@ -307,10 +224,8 @@ class line_segment_
 };
 
 
-class prlppd_  //parallelepiped
+struct prlppd_  //parallelepiped
 {
-    public:
-    
     double x1, x2, y1, y2, z1, z2;
 
     prlppd_ (): x1{NAN}, x2{NAN}, y1{NAN}, y2{NAN}, z1{NAN}, z2{NAN} {};
@@ -318,28 +233,6 @@ class prlppd_  //parallelepiped
     prlppd_ (double X1, double X2, 
              double Y1, double Y2, 
              double Z1, double Z2): x1{X1}, x2{X2}, y1{Y1}, y2{Y2}, z1{Z1}, z2{Z2} {};
-
-    prlppd_ &operator = (const prlppd_ &other)
-    {
-        x1 = other.x1;
-        y1 = other.y1;
-        z1 = other.z1;
-        x2 = other.x2;
-        y2 = other.y2;
-        z2 = other.z2;
-
-        return *this;
-    }
-
-    prlppd_ (const prlppd_ &other)
-    {
-        x1 = other.x1;
-        y1 = other.y1;
-        z1 = other.z1;
-        x2 = other.x2;
-        y2 = other.y2;
-        z2 = other.z2;  
-    }
 
     bool is_valid ();
 
@@ -351,10 +244,8 @@ class prlppd_  //parallelepiped
 };
 
 
-class node_
+struct node_
 {
-    public:
-
     prlppd_ p;
 
     std::vector <node_> nodes;
@@ -386,10 +277,8 @@ class node_
 };
 
 
-class my_tree
+struct my_tree
 {
-    public:
-
     node_ top;
 
     my_tree (): top{} {};

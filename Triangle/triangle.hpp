@@ -725,7 +725,7 @@ int my_tree::fill_tree (std::vector <triangle_> &t, int n)
         tmp_min.x = std::min (t[i].a.x, std::min (t[i].b.x, t[i].c.x));
         tmp_min.y = std::min (t[i].a.y, std::min (t[i].b.y, t[i].c.y));
         tmp_min.z = std::min (t[i].a.z, std::min (t[i].b.z, t[i].c.z));
-    
+        
         if (i == 0)
         {
             vmax = tmp_max;
@@ -743,15 +743,15 @@ int my_tree::fill_tree (std::vector <triangle_> &t, int n)
             vmin.z = std::min (vmin.z, tmp_min.z);
         }
     }
-    
-    top.p = {vmin.x - 1, vmax.x + 1, 
-             vmin.y - 1, vmax.x + 1, 
+
+    top.p = {vmin.x - 1, vmax.x + 1,
+             vmin.y - 1, vmax.y + 1, 
              vmin.z - 1, vmax.z + 1};
 
     for (int i = 0; i < n; ++i)
     {
         triangle_stat tr_stat = t[i].is_valid();
-
+        
         if (tr_stat == IS_NAN)
             std::cout << "wrong triangle " << i << std::endl;
 
