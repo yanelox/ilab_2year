@@ -8,6 +8,9 @@
 
 namespace ARC
 {
+
+size_t MIN_SIZE = 5;
+
 #define my_print(n)                     \
                                         \
     std::cout << "-\n" << #n << ": ";   \
@@ -43,10 +46,8 @@ struct my_iterator_
 
 
 template <typename T> 
-class Cache
+struct Cache
 {
-    public:
-
     std::list <T> T1 = {};
     std::list <T> T2 = {};
     std::list <T> B1 = {};
@@ -54,8 +55,8 @@ class Cache
 
     std::unordered_map <T, my_iterator_ <T>> map = {};
 
-    unsigned long c_size = 5; //max size of L1 and L2 (L1 = T1 + B1, L2 = T2 + B2)
-    unsigned long p_size = 0;
+    size_t c_size = 5; //max size of L1 and L2 (L1 = T1 + B1, L2 = T2 + B2)
+    size_t p_size = 0;
 
     int case1   (my_iterator_ <T> n, bool inT1);
     int case2   (my_iterator_ <T> n, bool inB2);
@@ -67,7 +68,7 @@ class Cache
 
     public:
 
-    Cache (unsigned long C): c_size(C) {};
+    Cache (size_t size): c_size((size / 2 < MIN_SIZE)? MIN_SIZE : size / 2) {};
 
     int push (T n);
 

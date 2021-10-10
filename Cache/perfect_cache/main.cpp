@@ -7,7 +7,7 @@ int main ()
 
     std::cin >> size;
 
-    prfct::Cache_ <int, int> cache(2 * size);
+    prfct::Cache_ <int, int> cache(size);
 
     std::cin >> n;
 
