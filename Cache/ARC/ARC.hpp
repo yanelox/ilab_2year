@@ -1,7 +1,9 @@
 #include "ARC.h"
 
+namespace ARC
+{
 template <typename T>
-int ARC <T>::push (T n)
+int Cache <T>::push (T n)
 {
     int ret_value = 0;
 
@@ -62,7 +64,7 @@ int ARC <T>::push (T n)
 }
 
 template <typename T>
-int ARC <T>::case1 (my_iterator_ <T> n, bool inT1)
+int Cache <T>::case1 (my_iterator_ <T> n, bool inT1)
 {
     T page = *(n.pointer);
 
@@ -80,7 +82,7 @@ int ARC <T>::case1 (my_iterator_ <T> n, bool inT1)
 }
 
 template <typename T>
-int ARC <T>::case2 (my_iterator_ <T> n, bool inB2)
+int Cache <T>::case2 (my_iterator_ <T> n, bool inB2)
 {
     T page = *(n.pointer);
     
@@ -98,7 +100,7 @@ int ARC <T>::case2 (my_iterator_ <T> n, bool inB2)
 }
 
 template <typename T>
-int ARC <T>::case3 (my_iterator_ <T> n, bool inB2)
+int Cache <T>::case3 (my_iterator_ <T> n, bool inB2)
 {
     T page = *(n.pointer);
     
@@ -116,7 +118,7 @@ int ARC <T>::case3 (my_iterator_ <T> n, bool inB2)
 }
 
 template <typename T>
-int ARC <T>::case4_1 (bool inB2)
+int Cache <T>::case4_1 (bool inB2)
 {
     T page;
 
@@ -142,7 +144,7 @@ int ARC <T>::case4_1 (bool inB2)
 }
 
 template <typename T>
-int ARC <T>::case4_2 (bool inB2)
+int Cache <T>::case4_2 (bool inB2)
 {
     T page;
 
@@ -161,7 +163,7 @@ int ARC <T>::case4_2 (bool inB2)
 }
 
 template <typename T>
-int ARC <T>::replace (bool inB2)
+int Cache <T>::replace (bool inB2)
 {
     T swap_var {};
 
@@ -192,7 +194,7 @@ int ARC <T>::replace (bool inB2)
 }
 
 template <typename T>
-int ARC <T>::print ()
+int Cache <T>::print ()
 {
     std::cout << "c = " << c_size << std::endl;
     std::cout << "p = " << p_size << std::endl;
@@ -203,4 +205,5 @@ int ARC <T>::print ()
     my_print(B2);
 
     return 0;
+}
 }

@@ -3,13 +3,15 @@
 
 int main ()
 {
-    prfct::Cache_ <int, int> cache(5);
+    int size, n;
 
-    int n;
+    std::cin >> size;
+
+    prfct::Cache_ <int, int> cache(2 * size);
 
     std::cin >> n;
 
-    std::vector <std::pair <int, int>> req(2 * n);
+    std::vector <std::pair <int, int>> req(n);
 
     for (int i = 0; i < n; ++i)
     {

@@ -9,7 +9,7 @@ int main ()
 {
     int n = 0;
 
-    long unsigned c = 0;
+    unsigned long c = 0;
 
     int x;
 
@@ -17,7 +17,7 @@ int main ()
     
     std::cin >> c;
 
-    ARC <int> cache {c};    
+    ARC::Cache <int> cache {c};    
 
     std::cin >> n;
 

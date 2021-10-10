@@ -6,6 +6,8 @@
 #include <list>
 #include <unordered_map>
 
+namespace ARC
+{
 #define my_print(n)                     \
                                         \
     std::cout << "-\n" << #n << ": ";   \
@@ -41,7 +43,7 @@ struct my_iterator_
 
 
 template <typename T> 
-class ARC
+class Cache
 {
     public:
 
@@ -65,9 +67,10 @@ class ARC
 
     public:
 
-    ARC (unsigned long C): c_size(C) {};
+    Cache (unsigned long C): c_size(C) {};
 
     int push (T n);
 
     int print ();
 };
+}
