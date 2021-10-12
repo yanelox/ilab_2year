@@ -341,7 +341,7 @@ bool surface_::content_vec (const vector_ &vec) const
 int surface_::print (int tab_number) const
 {
     tab_func (tab_number);
-
+    
     std::cout << "surface\n";
 
     tab_func (tab_number);
@@ -358,7 +358,7 @@ int surface_::print (int tab_number) const
         std::cout << "+ " << b;
 
     else
-        std::cout << "- " << abs(b);
+        std::cout << "- " << std::abs(b);
 
     tab_func (tab_number);
 
@@ -370,7 +370,7 @@ int surface_::print (int tab_number) const
         std::cout << "+ " << c;
 
     else
-        std::cout << "- " << abs(c);
+        std::cout << "- " << std::abs(c);
 
     tab_func (tab_number);
 
@@ -382,7 +382,7 @@ int surface_::print (int tab_number) const
         std::cout << "+ " << d << std::endl;
 
     else
-        std::cout << "- " << abs(d) << " = 0" << std::endl;
+        std::cout << "- " << std::abs(d) << " = 0" << std::endl;
     
     n.print(tab_number + 1);
     r.print(tab_number + 1);
@@ -390,6 +390,15 @@ int surface_::print (int tab_number) const
     tab_func (tab_number);
 
     std::cout << "}" << std::endl;;
+
+    return 0;
+}
+
+int surface_::vec_init (double a, double b, double c, double d)
+{
+    r.x = (d_equal (a, 0)) ? 0 : - d / a; 
+    r.y = (d_equal (b, 0)) ? 0 : - d / b; 
+    r.z = (d_equal (c, 0)) ? 0 :   d / c;
 
     return 0;
 }
@@ -498,7 +507,7 @@ int line_segment_::print  (int tab_number) const
 //parallelepiped
 
 
-bool prlppd_::is_valid ()
+bool parallelepiped_::is_valid () const
 {
     return  std::isfinite (x1) and std::isfinite (x2) and
             std::isfinite (y1) and std::isfinite (y2) and
@@ -506,7 +515,7 @@ bool prlppd_::is_valid ()
             (x1 < x2) and (y1 < y2) and (z1 < z2);
 }
 
-int prlppd_::contain_vec (const vector_ &vec)
+int parallelepiped_::contain_vec (const vector_ &vec) const
 {
     int res = 0;
 
@@ -531,7 +540,7 @@ int prlppd_::contain_vec (const vector_ &vec)
     return res;
 }
 
-int prlppd_::contain_tr (const triangle_ &t)
+int parallelepiped_::contain_tr (const triangle_ &t) const
 {
     int i1 = contain_vec (t.a), 
         i2 = contain_vec (t.b),
@@ -546,7 +555,7 @@ int prlppd_::contain_tr (const triangle_ &t)
     return 8;
 }
 
-int prlppd_::print (int tab_number) const
+int parallelepiped_::print (int tab_number) const
 {
     tab_func (tab_number);
 
@@ -579,7 +588,7 @@ int prlppd_::print (int tab_number) const
 //node
 
 
-bool node_::is_valid ()
+bool node_::is_valid () const
 {
     return p.is_valid();
 }

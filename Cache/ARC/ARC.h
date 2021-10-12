@@ -9,7 +9,7 @@
 namespace ARC
 {
 
-size_t MIN_SIZE = 5;
+size_t MIN_SIZE = 1;
 
 #define my_print(n)                     \
                                         \
@@ -55,7 +55,7 @@ struct Cache
 
     std::unordered_map <T, my_iterator_ <T>> map = {};
 
-    size_t c_size = 5; //max size of L1 and L2 (L1 = T1 + B1, L2 = T2 + B2)
+    size_t c_size; //max size of L1 and L2 (L1 = T1 + B1, L2 = T2 + B2)
     size_t p_size = 0;
 
     int case1   (my_iterator_ <T> n, bool inT1);

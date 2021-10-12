@@ -35,9 +35,9 @@ enum triangle_stat
 
 struct vector_
 {
-    double x, y, z;
+    double x = NAN, y = NAN, z = NAN;
 
-    vector_ (): x{NAN}, y{NAN}, z{NAN} {}
+    vector_ () = default;
     vector_ (double X, double Y, double Z): x(X), y(Y), z(Z) {}
 
     vector_ operator + (const vector_ &other) const
@@ -81,7 +81,7 @@ struct line_
 {
     vector_ r, a;
 
-    line_ (): r{}, a{} {}
+    line_ () = default;
 
     line_ (const vector_ &R, const vector_ &A): r(R), a(A) {}
 
@@ -97,7 +97,7 @@ struct triangle_
 {
     vector_ a, b, c;
 
-    triangle_ (): a{}, b{}, c{} {}
+    triangle_ () = default;
 
     triangle_ (const vector_ &A, const vector_ &B, const vector_ &C): a(A), b(B), c(C) {}
 
@@ -115,36 +115,24 @@ struct triangle_
 
 struct surface_
 {
-    double a, b, c, d;
+    private:
+
+    int vec_init (double a, double b, double c, double d);
+
+    public:
+
+    double a = NAN, b = NAN, c = NAN, d = NAN;
 
     vector_ n, r;
 
-    surface_ (): a(NAN), b(NAN), c(NAN), d(NAN), n{}, r{} {}
+    surface_ () = default;
     surface_ (double A, double B, double C, double D): a(A), b(B), c(C), d(D), n{A, B, C}, r{} 
     {
         if (d_equal (D, 0))
             r = {0, 0, 0};
 
         else
-        {
-            if (d_equal (A, 0))
-                r.x = 0;
-
-            else
-                r.x = - D / A;
-
-            if (d_equal (B, 0))
-                r.y = 0;
-
-            else
-                r.y = - D / B;
-
-            if (d_equal (C, 0))
-                r.z = 0;
-            
-            else
-                r.z = D / C;
-        }
+            vec_init (A, B, C, D);
     }
 
     surface_ (const vector_ &N, const vector_ &R): a(N.x), b(N.y), c(N.z), d(NAN), n(N), r(R)
@@ -172,25 +160,7 @@ struct surface_
                 r = {0, 0, 0};
 
             else
-            {
-                if (d_equal (a, 0))
-                    r.x = 0;
-
-                else
-                    r.x = - d / a;
-
-                if (d_equal (b, 0))
-                    r.y = 0;
-
-                else
-                    r.y = - d / b;
-
-                if (d_equal (c, 0))
-                    r.z = 0;
-                
-                else
-                    r.z = d / c;
-            }
+                vec_init (a, b, c, -d);
         }
     }
 
@@ -208,7 +178,7 @@ struct line_segment_
 {
     vector_ a, b;
 
-    line_segment_ (): a{}, b{} {}
+    line_segment_ () = default;
 
     line_segment_ (const vector_ &A, const vector_ &B): a{A}, b{B} {};
 
@@ -224,21 +194,29 @@ struct line_segment_
 };
 
 
-struct prlppd_  //parallelepiped
+struct parallelepiped_
 {
-    double x1, x2, y1, y2, z1, z2;
+    double  x1 = NAN, 
+            x2 = NAN, 
+            y1 = NAN, 
+            y2 = NAN, 
+            z1 = NAN, 
+            z2 = NAN;
 
-    prlppd_ (): x1{NAN}, x2{NAN}, y1{NAN}, y2{NAN}, z1{NAN}, z2{NAN} {};
+    parallelepiped_ () = default;
 
-    prlppd_ (double X1, double X2, 
-             double Y1, double Y2, 
-             double Z1, double Z2): x1{X1}, x2{X2}, y1{Y1}, y2{Y2}, z1{Z1}, z2{Z2} {};
+    parallelepiped_ (double X1, double X2, 
+                     double Y1, double Y2, 
+                     double Z1, double Z2): 
+                     x1{X1}, x2{X2}, 
+                     y1{Y1}, y2{Y2}, 
+                     z1{Z1}, z2{Z2} {};
 
-    bool is_valid ();
+    bool is_valid () const;
 
-    int contain_vec (const vector_ &vec);
+    int contain_vec (const vector_ &vec) const;
 
-    int contain_tr  (const triangle_ &t);
+    int contain_tr  (const triangle_ &t) const;
 
     int print (int tab_number) const;
 };
@@ -246,7 +224,7 @@ struct prlppd_  //parallelepiped
 
 struct node_
 {
-    prlppd_ p;
+    parallelepiped_ p;
 
     std::vector <node_> nodes;
 
@@ -254,16 +232,16 @@ struct node_
 
     std::vector <int> I_;
 
-    node_ (): nodes{}, p{}, T_{}, I_{} {};
+    node_ () = default;
 
     node_ (double x1, double x2,
            double y1, double y2,
            double z1, double z2): nodes{}, p{x1, x2, y1, y2, z1, z2}, 
                                                   T_{}, I_{} {};
                                 
-    node_ (const prlppd_ &P): nodes{}, p{P}, T_{}, I_{} {};
+    node_ (const parallelepiped_ &P): nodes{}, p{P}, T_{}, I_{} {};
 
-    bool is_valid ();
+    bool is_valid () const;
 
     int make_childs ();
 
@@ -281,7 +259,7 @@ struct my_tree
 {
     node_ top;
 
-    my_tree (): top{} {};
+    my_tree () = default;
 
     my_tree (double x1, double x2, 
              double y1, double y2, 
