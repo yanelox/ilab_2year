@@ -31,4 +31,4 @@
 *.out
 *.app
 */.vscode/*
-*/gg.txt
+*.txt
