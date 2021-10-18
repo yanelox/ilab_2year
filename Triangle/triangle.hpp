@@ -69,6 +69,17 @@ int line_::point_to_line (const vector_ &v1, const vector_ &v2)
     return 0;
 }
 
+vector_ line_::line_intersect (const line_ &l) const
+{
+    vector_ res{};
+
+    double alpha = ((l.r - r)^l.a) / (a^l.a);
+
+    res = r + a * alpha;
+
+    return res;
+}
+
 int line_::print (int tab_number) const
 {
     tab_func (tab_number);
@@ -125,14 +136,13 @@ bool triangle_::contain_vec (const vector_ &v) const
             return a.is_equal (v);
 
         case IS_LINES:
-            if ((a.is_equal(b) or b.is_equal(c)) and ((a - v) * (c - v)).is_zero())
+            if (b.is_equal(c) and d_equal((v - a).mod() + (v - b).mod(), (b - a).mod()))
+                return true;
+            
+            else if (d_equal((v - c).mod() + (v - b).mod(), (b - c).mod()))
                 return true;
 
-            else if (a.is_equal(c) and ((a - v) * (b - v)).is_zero())
-                return true;
-
-            else
-                return false;
+            break;
 
         default:
             break;
@@ -171,41 +181,51 @@ bool triangle_::trl_intersect (const triangle_ &t) const
     if (tmp1 == IS_LINES and tmp2 == IS_POINT)
         return t.contain_vec (a);
 
-    if (tmp1 == IS_LINES and tmp2 == IS_LINES)
+    if (tmp1 == IS_LINES and tmp2 == IS_LINES) 
     {
-        vector_ v1 = a, v2, v3 = t.a, v4;
-
-        if (a.is_equal(b))
-            v2 = c;
-
-        else
-            v2 = b;
-
-        if (t.a.is_equal(t.b))
-            v4 = t.c;
-
-        else
-            v4 = t.b;
-
-        line_segment_ ls1 = {v1, v2}, ls2 = {v3, v4};
+        line_segment_ ls1 = {a, c}, ls2 = {t.a, t.c};
 
         return ls1.is_intersect (ls2);
     }
-    
+     
     surface_ s1 {t.a, t.b, t.c};
 
-    surface_ s11 {a, b, c};
-
-    line_segment_ a1 {a, b}, a2 {b, c}, a3 {c, a};
-
-    line_segment_ a11 {t.a, t.b}, a21 {t.b, t.c}, a31 {t.c, t.a};
-   
-    vector_ res1 = a1.sur_its_loc (s1), res2 = a2.sur_its_loc (s1), res3 = a3.sur_its_loc (s1);
+    surface_ s2 {a, b, c};
     
-    vector_ res11 = a11.sur_its_loc (s11), res21 = a21.sur_its_loc (s11), res31 = a31.sur_its_loc (s11);
+    line_segment_ a1[] = {{a, b}, {b, c}, {c, a}};
+
+    line_segment_ a2[] = {{t.a, t.b}, {t.b, t.c}, {t.c, t.a}};
+    // s1.print(); s2.print();
+    // for (int i = 0; i < 3; ++i)
+    //     a1[i].print();
+    // for (int i = 0; i < 3; ++i)
+    //     a2[i].print();
+    // std::cout << a1[2].sur_intersect(s1) << std::endl;
+    for (int i = 0; i < 3; ++i)
+        if (a1[i].sur_intersect(s1) == IS_CONTENTS)
+            if (a1[i].is_intersect(a2[0]) or 
+                a1[i].is_intersect(a2[1]) or 
+                a1[i].is_intersect(a2[2]))
+                return true;
     
-    return t.contain_vec (res1) or t.contain_vec (res2) or t.contain_vec (res3) or
-           this->contain_vec (res11) or this->contain_vec (res21) or this->contain_vec (res31);
+    for (int i = 0; i < 3; ++i)
+        if (a2[i].sur_intersect(s2) == IS_CONTENTS)
+            if (a2[i].is_intersect(a1[0]) or 
+                a2[i].is_intersect(a1[1]) or 
+                a2[i].is_intersect(a1[2]))
+                return true;
+
+    vector_ res1[3];
+    vector_ res2[3];
+
+    for (int i = 0; i < 3; ++i)
+    {
+        res1[i] = a1[i].sur_its_loc(s1);
+        res2[i] = a2[i].sur_its_loc(s2);
+    }
+    
+    return t.contain_vec (res1[0]) or t.contain_vec (res1[1]) or t.contain_vec (res1[2]) or
+             contain_vec (res2[0]) or   contain_vec (res2[1]) or   contain_vec (res2[2]);
 }
 
 int triangle_::print (int tab_number) const
@@ -408,11 +428,31 @@ int surface_::vec_init (double a, double b, double c, double d)
 
 bool line_segment_::is_intersect (const line_segment_ &ls) const
 {
-    vector_ v1 = a - b, v2 = ls.a - ls.b, v3 = a - ls.a;
+    if(ls.a.is_equal(a) or ls.a.is_equal(b) or ls.b.is_equal(a) or ls.b.is_equal(b))
+        return true;
 
-    double res = (v1 * v2) ^ v3;
+    surface_ s {a, b, ls.a};
 
-    return d_equal(res, 0);
+    if(!s.content_vec(ls.b))
+        return false;
+
+    line_ l1{}, l2{};
+    line_segment_ ls1{a, b}, ls2{ls.a, ls.b};
+
+    l1.point_to_line(a, b);
+    l2.point_to_line(ls.a, ls.b);
+
+    vector_ res = l1.line_intersect(l2);
+
+    if (ls1.content_vec(res) and ls2.content_vec(res))
+        return true;
+
+    return false;
+}
+
+bool line_segment_::content_vec (const vector_ &v) const
+{
+    return d_equal((v - a).mod() + (v - b).mod(), (b - a).mod());
 }
 
 bool line_segment_::is_valid () const
@@ -435,11 +475,11 @@ mutual_loc line_segment_::sur_intersect (const surface_ &s) const
 
     if (ac or bc)
         return IS_INTERSECT;
-
+    
     double f = (a - s.r) ^ s.n;
     double l = (b - s.r) ^ s.n;
     double v = (a - b)   ^ s.n;
-
+    
     if ((f > 0 and l < 0) or (f < 0 and l > 0))
         return IS_INTERSECT;
 
@@ -681,7 +721,7 @@ int node_::print (int tab_number, int node_number) const
         std::cout << "{\n";
 
         for (int i = 0; i < T_.size(); ++i)
-            T_[i].print (tab_number + 2, I_[i]);
+            T_[i].print (I_[i], tab_number + 2);
 
         tab_func (tab_number + 1);
 
@@ -699,7 +739,7 @@ int node_::print (int tab_number, int node_number) const
         std::cout << "{\n";
 
         for (int i = 0; i < 8; ++i)
-            nodes[i].print(tab_number + 2, i);
+            nodes[i].print(i, tab_number + 2);
 
         tab_func (tab_number + 1);
 

@@ -1,7 +1,11 @@
-all:
-	g++ main.cpp -O2
-check:
-	g++ tmain.cpp -O2
+CXX = g++
+CXXFLAGS = -O2 -o $@
 
-debug:
-	g++ main.cpp -O2 -g
+triangle: main.cpp triangle.h triangle.hpp
+	$(CXX) $(CXXFLAGS) $<
+
+check: tmain.cpp triangle.h triangle.hpp
+	$(CXX) $(CXXFLAGS) $<
+
+debug: main.cpp triangle.h triangle.hpp
+	$(CXX) $(CXXFLAGS) -g $<

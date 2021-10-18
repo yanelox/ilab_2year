@@ -9,17 +9,7 @@
 namespace ARC
 {
 
-size_t MIN_SIZE = 1;
-
-#define my_print(n)                     \
-                                        \
-    std::cout << "-\n" << #n << ": ";   \
-                                        \
-    for (auto i: n)                     \
-        std::cout << i << " ";          \
-                                        \
-    std::cout << "\n-\n";        
-
+size_t MIN_SIZE = 1;    
 
 enum source_list
 {
@@ -68,10 +58,13 @@ struct Cache
 
     public:
 
-    Cache (size_t size): c_size((size / 2 < MIN_SIZE)? MIN_SIZE : size / 2) {};
+    Cache (size_t size = 0): c_size((size / 2 < MIN_SIZE)? MIN_SIZE : size / 2) {};
 
     int push (T n);
 
-    int print ();
+    void print () const; 
 };
+
+template <typename T>
+void print_list (std::list <T> &list, int n);
 }

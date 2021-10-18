@@ -26,7 +26,7 @@ int main ()
     for (auto i:res1)
         std::cout << i << std::endl;
 
-    // res1 = geom::triv_sol (T, n);
+    // res1 = geom::triv_sol (T, 11);
     // for (auto i:res1)
     //     std::cout << i << std::endl;
 

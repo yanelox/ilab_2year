@@ -1,9 +1,14 @@
-all:
-	g++ main.cpp -O2
-debug:
-	g++ main.cpp -O2 -g
-wall:
-	g++ main.cpp -O2 -Wall
+CXX = g++
+CXXFLAGS = -O2 -o $@
 
-gen:
-	g++ gen.cpp -O2
+arc: main.cpp ARC.h ARC.hpp
+	$(CXX) $(CXXFLAGS) $<
+
+debug: main.cpp ARC.h ARC.hpp
+	$(CXX) $(CXXFLAGS) $< -g
+
+wall: main.cpp ARC.h ARC.hpp
+	$(CXX) $(CXXFLAGS) $< -Wall
+
+gen: gen.cpp ARC.h ARC.hpp
+	$(CXX) $(CXXFLAGS) $<

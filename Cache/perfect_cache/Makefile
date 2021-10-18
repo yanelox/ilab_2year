@@ -1,5 +1,8 @@
-all:
-	g++ main.cpp -O2
+CXX = g++
+CXXFLAGS = -O2 -o $@
 
-debug:
-	g++ main.cpp -O2 -g
+beladi: main.cpp prfct.h prfct.hpp
+	$(CXX) $(CXXFLAGS) $<
+
+debug: main.cpp prfct.h prfct.hpp
+	$(CXX) $(CXXFLAGS) -g $<

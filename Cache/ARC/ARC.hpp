@@ -193,17 +193,28 @@ int Cache <T>::replace (bool inB2)
     return 0;
 }
 
+// printing functions
+
 template <typename T>
-int Cache <T>::print ()
+void print_list (std::list <T> &list, char name[])
+{
+    std::cout << "-\n" << name << ": ";
+                                        
+    for (auto i: list)       
+        std::cout << i << " ";
+                                        
+    std::cout << "\n-\n";    
+}
+
+template <typename T>
+void Cache <T>::print () const
 {
     std::cout << "c = " << c_size << std::endl;
     std::cout << "p = " << p_size << std::endl;
 
-    my_print(T1);
-    my_print(T2);
-    my_print(B1);
-    my_print(B2);
-
-    return 0;
+    print_list (T1, "T1");
+    print_list (T2, "T2");
+    print_list (B1, "B1");
+    print_list (B2, "B2");
 }
 }
