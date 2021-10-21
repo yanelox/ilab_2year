@@ -21,22 +21,21 @@ namespace matrix
     template <typename T>
     T nod (T n1, T n2)
     {
-        n1 = (n1 > 0) ? n1 : -n1;
-        n2 = (n2 > 0) ? n2 : -n2;
+        T res;
 
-        if (equal(n1, T{0}) or equal(n2, T{1}))
-            return (T) 1;
-
-        while(!equal(n1, n2))
+        while (n1 > T{1} and n2 > T{1} and !equal(n1, n2))
         {
             if (n1 > n2)
-                n1 -= n2;
+                n1 = n1 - n2;
 
             else
-                n2 -= n1;
+                n2 = n2 - n1;
         }
         
-        return n1;
+        if (equal(n1, n2))
+            return n1;
+
+        return T{1};
     }
 
     template <typename T>
@@ -44,7 +43,7 @@ namespace matrix
     {
         T numerator, denominator;
 
-        frac_ (): numerator{}, denominator{} {}
+        frac_ (): numerator{0}, denominator{1} {}
         frac_ (T N): numerator{N}, denominator{(T) 1} {}
         frac_ (T N, T D): numerator{N}, denominator{D} 
         {
@@ -54,12 +53,12 @@ namespace matrix
         void reduction ()
         {
             T nod_ = nod (numerator, denominator);
-        
+            
             numerator = numerator / nod_;
             denominator = denominator / nod_;
         }
 
-        frac_ <T> operator + (const frac_ &rhs)
+        frac_ <T> operator + (const frac_ <T> &rhs)
         {
             frac_ <T> res;
             
@@ -71,7 +70,7 @@ namespace matrix
             return res;
         }
 
-        frac_ <T> operator - (const frac_ &rhs)
+        frac_ <T> operator - (const frac_ <T> &rhs)
         {
             frac_ <T> res;
 
@@ -83,7 +82,7 @@ namespace matrix
             return res;
         }
 
-        frac_ <T> operator * (const frac_ &rhs)
+        frac_ <T> operator * (const frac_ <T> &rhs)
         {
             frac_ <T> res;
 
@@ -105,7 +104,7 @@ namespace matrix
             return res;
         }
 
-        frac_ <T> operator / (const frac_ &rhs)
+        frac_ <T> operator / (const frac_ <T> &rhs)
         {
             frac_ <T> res;
 
@@ -117,14 +116,14 @@ namespace matrix
             return res;
         }
 
-        frac_ <T> operator += (const frac_ &rhs)
+        frac_ <T> operator += (const frac_ <T> &rhs)
         {
             (*this) = (*this) + rhs;
 
             return *this;
         }
 
-        frac_ <T> operator -= (const frac_ &rhs)
+        frac_ <T> operator -= (const frac_ <T> &rhs)
         {
             (*this) = (*this) - rhs;
 
@@ -138,13 +137,31 @@ namespace matrix
             return *this;
         }
 
-        int is_valid () const;
+        bool operator < (const frac_ <T> rhs)
+        {
+            if (numerator * rhs.denominator < denominator * rhs.numerator)
+                return true;
+
+            return false;
+        }
+
+        bool operator > (const frac_ rhs)
+        {
+            return !((*this) < rhs);
+        }
+
+        bool is_zero () const
+        {
+            return equal (numerator, T{0});
+        }
+
+        bool is_valid () const;
 
         void print () const;
     };
 
     template <typename T>
-    std::ostream & operator<< (std::ostream &out, frac_ <T> &rhs)
+    std::ostream & operator<< (std::ostream &out, const frac_ <T> &rhs)
     {
         out << rhs.numerator << "/" << rhs.denominator;
 
@@ -165,131 +182,212 @@ namespace matrix
     }
 
     template <typename T>
-    class matrix_
+    class row_
     {
-        T* numbers;
+        T *elements;
 
         size_t size;
 
         public:
-        
-        matrix_ (): numbers{NULL}, size{0} {}
-        
-        matrix_ (size_t Size): numbers{new T[Size * Size]}, size{Size} {}
 
-        matrix_ (const matrix_ &rhs): numbers {new T[rhs.size * rhs.size]}, size{rhs.size}
+        row_ (): elements {NULL}, size{0} {}
+
+        row_ (size_t Size): elements{new T[Size]{}}, size {Size} {}
+
+        row_ (const std::vector <T> &Vec)
         {
-            size_t q_size = size * size;
+            size = Vec.size();
 
-            for (size_t i = 0; i < q_size; ++i)
-                numbers[i] = rhs.numbers[i];
+            elements = new T[size];
+
+            for (size_t i = 0; i < size; ++i)
+                elements[i] = Vec[i];
         }
 
-        matrix_ (matrix_ && rhs): numbers{rhs.numbers}, size{rhs.size}
+        row_ (const row_ <T> &rhs) = delete;
+
+        row_ (row_ <T> && rhs): elements{rhs.elements}, size{rhs.size}
         {
-            rhs.numbers = nullptr;
+            rhs.elements = nullptr;
         }
 
-        matrix_ (const std::vector <T> &Vec, size_t Size)
-        {
-            if (Vec.size() != Size * Size)
-            {
-                numbers = nullptr;
-                size = 0;
+        row_ <T> & operator = (const row_ &rhs) = delete;
 
-                return;
-            }
-
-            numbers = new T[Size * Size];
-            size = Size;
-
-            size_t q_size = size * size;
-
-            for (size_t i = 0; i < q_size; ++i)
-                numbers[i] = Vec[i];
-        }
-
-        matrix_ <T> & operator = (const matrix_ &rhs)
+        row_ <T> & operator = (row_ &&rhs)
         {
             if (this == &rhs)
                 return *this;
+
+            delete[] elements;
+
+            elements = rhs.elements;
 
             size = rhs.size;
 
-            delete[] numbers;
-
-            numbers = new T[size];
-
-            size_t q_size = size * size;
-
-            for (size_t i = 0; i < q_size; ++i)
-                numbers[i] = rhs.numbers[i];
+            rhs.elements = nullptr;
 
             return *this;
         }
 
-        matrix_ <T> & operator = (matrix_ && rhs)
+        ~row_ ()
         {
-            if (this == &rhs)
-                return *this;
-
-            delete[] numbers;
-
-            numbers = rhs.numbers;
-
-            rhs.numbers = nullptr;
-
-            return *this;
+            delete[] elements;
         }
 
-        ~matrix_ ()
+        T& operator [] (int x)
         {
-            delete[] numbers;
+            return elements[x % size];
         }
 
-        T & operator () (long i, long j) const
+        const T& operator [] (int x) const
         {
-            return numbers[(i % size) * size + (j % size)];
+            return elements[x % size];
         }
 
-        matrix_ <T> operator + (const matrix_ &rhs)
+        row_ <T> operator + (const row_ &rhs) const
         {
             if (size != rhs.size)
-                return matrix_ {};
+                return row_ <T> {};
 
-            matrix_ res{size};
+            row_ res{size};
 
-            size_t q_size = size * size;
-
-            for (size_t i = 0; i < q_size; ++i)
-                res.numbers[i] = numbers[i] + rhs.numbers[i];
+            for (size_t i = 0; i < size; ++i)
+                res[i] = elements[i] + rhs.elements[i];
 
             return res;
         }
 
-        matrix_ <T> operator - (const matrix_ &rhs)
+        row_ <T> operator - (const row_ &rhs) const
         {
             if (size != rhs.size)
-                return matrix_ {};
+                return row_ <T> {};
 
-            matrix_ res{size};
+            row_ res{size};
 
-            size_t q_size = size * size;
-
-            for (size_t i = 0; i < q_size; ++i)
-                res.numbers[i] = numbers[i] - rhs.numbers[i];
+            for (size_t i = 0; i < size; ++i)
+                res[i] = elements[i] - rhs.elements[i];
 
             return res;
         }
 
-        int is_valid () const;
+        row_ <T> operator * (const T &rhs) const
+        {
+            row_ res{size};
+
+            for (size_t i = 0; i < size; ++i)
+                res[i] = elements[i] * rhs;
+
+            return res;
+        }
+
+        size_t get_size () const
+        {
+            return size;
+        }
+    };
+
+    template <typename T>
+    std::ostream & operator << (std::ostream &out, const row_ <T> &Row)
+    {
+        out << "{";
+
+        for (size_t i = 0; i < Row.get_size(); ++i)
+        {
+            out << Row[i];
+            
+            if (i != Row.get_size() - 1)
+                out << " ";
+        }
+
+        out << "}" << std::endl;
+
+        return out;
+    }
+
+    template <typename T>
+    class matrix_
+    {
+        row_ <row_ <T>> elements;
+
+        size_t size;
+
+        public:
+
+        matrix_ () = default;
+
+        matrix_ (size_t Size): elements{Size}, size{Size}
+        {
+            for (size_t i = 0; i < Size; i++)
+                elements[i] = row_ <T> {Size};
+        }
+
+        row_ <T> & operator [] (int x)
+        {
+            return elements[x % size];
+        }
+
+        const row_ <T> & operator [] (int x) const
+        {
+            return elements[x % size];
+        }
+
+        matrix_ <T> operator + (const matrix_ &rhs) const
+        {
+            if (size != rhs.size)
+                return matrix_ <T> {};
+
+            matrix_ <T> res{size};
+
+            for (size_t i = 0; i < size; ++i)
+                res[i] = elements[i] + rhs.elements[i];
+
+            return res;
+        }
+
+        matrix_ <T> operator - (const matrix_ &rhs) const
+        {
+            if (size != rhs.size)
+                return matrix_ <T> {};
+
+            matrix_ <T> res{size};
+
+            for (size_t i = 0; i < size; ++i)
+                res[i] = elements[i] - rhs.elements[i];
+
+            return res;
+        }
+
+        size_t get_size () const
+        {
+            return size;
+        }
 
         int fill ();
+        int fill (const std::vector <T> &Vec);
 
-        void print (int mode = 0) const;
+        int g_elimination ();
 
-        std::pair <matrix_ <frac_ <T>>, matrix_  <frac_ <T>>> get_LU () const;
-
-        frac_ <T> get_det () const;
+        T get_det (int sign) const;
     };
+
+    template <typename T>
+    std::ostream & operator << (std::ostream &out, const matrix_ <T> &M)
+    {
+        for (size_t i = 0; i < M.get_size(); ++i)
+        {
+            out << "{";
+
+            for (size_t j = 0; j < M.get_size(); ++j)
+            {
+                out << M[i][j];
+
+                if (j != M.get_size() - 1)
+                    out << " ";
+            }
+
+            out << "}\n";
+        }
+
+        return out;
+    }
 }

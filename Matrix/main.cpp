@@ -5,33 +5,30 @@
 
 int main ()
 {
-    size_t n;
+    size_t n = 0;
 
     std::cin >> n;
 
-    std::vector <double> v (n * n);
+    std::vector <matrix::frac_ <double>> vec(n * n);
 
-    for (int i = 0; i < n * n; ++i)
+    for (size_t i = 0; i < n * n; ++i)
     {
         double x;
 
         std::cin >> x;
 
-        v[i] = x;
+        vec[i] = matrix::frac_ <double> {x};
     }
 
-    matrix::matrix_ <double> M {v, n};
+    matrix::matrix_ <matrix::frac_ <double>> M{n};
 
-    // M.print();
+    M.fill (vec);
 
-    // std::pair <matrix::matrix_ <int>, matrix::matrix_ <int>> res = M.get_LU();
-    // res.first.print();
-    // res.second.print();
+    // std::cout << M;
 
-    matrix::frac_ <double> det = M.get_det();
-    // det.print();
+    int tmp = M.g_elimination();
 
-    std::cout << det.numerator / det.denominator << std::endl;
+    matrix::frac_ <double> res = M.get_det(tmp);
 
-    return 0;
+    std::cout << res.numerator / res.denominator << std::endl;
 }

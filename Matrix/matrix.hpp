@@ -6,131 +6,82 @@ namespace matrix
     //frac
 
     template <typename T>
-    int frac_ <T>::is_valid () const
+    bool frac_ <T>::is_valid () const
     {
         return !equal(denominator, (T) 0);
     }
 
-    template<typename T>
+    template <typename T>
     void frac_ <T>::print () const
     {
         std::cout << numerator << "/" << denominator;
     }
 
+    //row 
+
+    
+
     //matrix
 
     template <typename T>
-    void matrix_ <T>::print (int mode) const
+    int matrix_ <T>::g_elimination ()
     {
-        if (mode == 0)
-            std::cout << "matrix:\n";
+        int res = 1;
 
-        for (size_t i = 0; i < size; ++i)
+        for (size_t i = 0; i < get_size(); ++i)
         {
-            if (mode == 0)
-                std::cout << "{";
+            size_t j = i;
 
-            for (size_t j = 0; j < size; ++j)
+            while ((*this)[j][i].is_zero())
+                ++j;
+
+            if (j != i)
             {
-                std::cout << (*this)(i, j);
-
-                if (j != size - 1)
-                    std::cout << " ";
+                std::swap ((*this)[j], (*this)[i]);
+                res *= -1;
             }
 
-            if (mode == 0)
-                std::cout << "}\n";
-
-            else
-                std::cout << std::endl;
+            for (size_t k = i + 1; k < get_size(); ++k)
+                if ((*this)[k][i].is_zero() == 0)
+                    (*this)[k] = (*this)[k] - (*this)[i] * ((*this)[k][i] / (*this)[i][i]);
         }
-    }
-
-    template <typename T>
-    int matrix_ <T>::is_valid () const
-    {
-        return (size > 0) and numbers;
-    }
-
-    template <typename T>
-    int matrix_ <T>::fill ()
-    {
-        if (!is_valid())
-            return -1;
-
-        size_t q_size = size * size;
-
-        for (size_t i = 0; i < q_size; ++i)
-            std::cin >> numbers[i];
-
-        return 0;
-    }
-
-    template <typename T>
-    std::pair <matrix_ <frac_ <T>>, matrix_ <frac_ <T>>> matrix_ <T>::get_LU () const
-    {
-        std::pair <matrix_ <frac_ <T>>, matrix_ <frac_ <T>>> res {{size}, {size}};
-        
-        for (size_t i = 0; i < size; ++i)
-            for (size_t j = 0; j < size; ++j)
-            {
-                res.second(i, j) = frac_ <T>{0};
-                res.first(i, j) = (i == j) ? frac_ <T>{1} : frac_ <T>{0};
-            }
-        
-        for (size_t i = 0; i < size; ++i)
-            for (size_t j = 0; j < size; ++j)
-                if (i <= j)
-                {
-                    frac_ <T> tmp{0};
-
-                    res.second(i, j) = (*this)(i, j);
-                    
-                    for (size_t k = 0; k < i; ++k)
-                    {
-                        tmp -= res.first(i, k) * res.second(k, j);
-                    }
-
-                    res.second(i, j) += tmp;
-                }
-
-                else
-                {
-                    frac_ <T> tmp{0};
-
-                    res.first(i, j) = (*this)(i, j);
-
-                    for (size_t k = 0; k < j; ++k)
-                        tmp -= res.first(i, k) * res.second(k, j);
-
-                    res.first(i, j) += tmp;
-
-                    res.first(i, j) = res.first(i, j) / res.second(j, j);
-                }
 
         return res;
     }
 
     template <typename T>
-    frac_ <T> matrix_ <T>::get_det () const
+    int matrix_ <T>::fill ()
     {
-        std::pair <matrix_ <frac_ <T>>, matrix_ <frac_ <T>>> res = get_LU();
-    
-        frac_ <T> det1{1}, det2{1};
+        for (size_t i = 0; i < size; ++i)
+            for (size_t j = 0; j < size; ++j)
+                std::cin >> (*this)[i][j];
+
+        return 0;
+    }
+
+    template <typename T>
+    int matrix_ <T>::fill (const std::vector <T> &Vec)
+    {
+        if (Vec.size() != size * size)
+            return -1;
 
         for (size_t i = 0; i < size; ++i)
-        {
-            // std::cout << "--" << std::endl << i << std::endl;
-            // res.first(i, i).print(); std::cout << std::endl;
-            // res.second(i, i).print();std::cout << std::endl;
-            
-            det1 *= res.first(i, i);
-            det2 *= res.second(i, i);
+            for (size_t j = 0; j < size; ++j)
+                (*this)[i][j] = Vec[i * size + j];
 
-            // det1.print();std::cout << std::endl;
-            // det2.print();std::cout << std::endl;
-        }
+        return 0;
+    }
 
-        return det1 * det2;
+    template <typename T>
+    T matrix_ <T>::get_det (int sign) const
+    {
+        T res = T{1};
+
+        for (size_t i = 0; i < size; ++i)
+            res = res * (*this)[i][i];
+
+        res = res * sign;
+
+        return res;
     }
 }

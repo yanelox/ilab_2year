@@ -1,10 +1,10 @@
 count=10
 
-make matrix
+make matrix.out
 
 for((i=1;i<=$count;i++))
 do
-answ=$(./matrix < tests/$i.test)
+answ=$(./matrix.out < tests/$i.test)
 t_answ=$(cat answ/1.answ)
 # echo $answ
 # echo $t_answ
