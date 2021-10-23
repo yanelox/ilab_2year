@@ -32,18 +32,21 @@ namespace matrix
         {
             size_t j = i;
 
-            while ((*this)[j][i].is_zero())
+            while (j < get_size() and (*this)[j][i].is_zero())
                 ++j;
-
-            if (j != i)
+            
+            if (j != get_size())
             {
-                std::swap ((*this)[j], (*this)[i]);
-                res *= -1;
+                if (j != i)
+                {
+                    std::swap ((*this)[j], (*this)[i]);
+                    res *= -1;
+                }
+                
+                for (size_t k = i + 1; k < get_size(); ++k)
+                    if ((*this)[k][i].is_zero() == 0)
+                        (*this)[k] = (*this)[k] - (*this)[i] * ((*this)[k][i] / (*this)[i][i]);
             }
-
-            for (size_t k = i + 1; k < get_size(); ++k)
-                if ((*this)[k][i].is_zero() == 0)
-                    (*this)[k] = (*this)[k] - (*this)[i] * ((*this)[k][i] / (*this)[i][i]);
         }
 
         return res;
@@ -60,25 +63,18 @@ namespace matrix
     }
 
     template <typename T>
-    int matrix_ <T>::fill (const std::vector <T> &Vec)
-    {
-        if (Vec.size() != size * size)
-            return -1;
-
-        for (size_t i = 0; i < size; ++i)
-            for (size_t j = 0; j < size; ++j)
-                (*this)[i][j] = Vec[i * size + j];
-
-        return 0;
-    }
-
-    template <typename T>
     T matrix_ <T>::get_det (int sign) const
     {
         T res = T{1};
 
         for (size_t i = 0; i < size; ++i)
-            res = res * (*this)[i][i];
+            if (!(*this)[i][i].is_zero())
+                res = res * (*this)[i][i];
+            else
+            {
+                res = T{0};
+                break;
+            }
 
         res = res * sign;
 

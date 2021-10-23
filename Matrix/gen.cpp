@@ -1,40 +1,43 @@
 #include <iostream>
-#include "matrix.hpp"
+#include <cmath>
+#include "lib/matrix.hpp"
+
+#define TYPE int
 
 int main ()
 {
-    // srand(time(NULL));
+    std::cout.precision(10);
 
-    // size_t size = 10;
+    srand(time(NULL));
 
-    // matrix::matrix_ <double> M {size};
+    size_t size = 10;
 
-    // for (size_t i = 0; i < size; ++i)
-    //     for (size_t j = 0; j < size; ++j)
-    //         if (i == j)
-    //             M(i, j) = 1;
+    matrix::matrix_ <TYPE> M {size};
+    
+    TYPE det = 42;
 
-    //         else
-    //             M(i, j) = 0;
+    for (size_t i = 0; i < size; ++i)
+        for (size_t j = 0; j < size; ++j)
+            if (i == j)
+                M[i][j] = 1;
 
-    // size_t tmpi = rand() % (size / 2);
+            else
+                M[i][j] = 0;
 
-    // M(tmpi, tmpi) = 6;
-    // M(tmpi + size/2, tmpi + size/2) = 7;
+    M[0][0] = 3;
+    M[5][5] = 2;
+    M[9][9] = 7;
 
-    // // M.print(0);
+    for (size_t i = 0; i < size; ++i)
+        for (size_t j = 0; j < size; ++j)
+        {
+            TYPE c = ((TYPE) i - size) / 2 + std::rand() % (size - i);
+            
+            if (i != j)
+                M[j] = M[j] + M[i] * c; 
+        }
 
-    // for (size_t i = 0; i < size; ++i)
-    //     for (size_t j = 0; j < size; ++j)
-    //     {
-    //         double c = -(double) (size - i) / 2 + rand() % (size - i);
+    std::cout << size << std::endl;
 
-    //         if (i != j)
-    //             for (size_t k = 0; k < size; ++k)
-    //                 M(i, k) += c * M(j, k); 
-    //     }
-
-    // std::cout << size << std::endl;
-
-    // M.print(1);
+    std::cout << M;
 }

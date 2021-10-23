@@ -12,6 +12,6 @@ if [ $t_answ = $answ ]
 then
 echo "Test $i passed"
 else
-echo "Test $i not passed"
+echo "Test $i not passe: answ = $answ, true answ = $t_answ"
 fi
 done

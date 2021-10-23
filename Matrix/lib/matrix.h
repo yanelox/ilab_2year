@@ -9,22 +9,31 @@ namespace matrix
     template <typename T>
     bool equal (T n1, T n2)
     {
+        if (n1 == n2)
+            return true;
+
         if (n1 > n2)
-            return (n1 - n2) < eps;
+            return (n1 - n2) <= eps;
 
         else
-            return (n2 - n1) < eps;
+            return (n2 - n1) <= eps;
 
-        return 0;
+        return false;
     }
 
     template <typename T>
-    T nod (T n1, T n2)
+    T nod (T n1_, T n2_)
     {
+        T n1 = std::abs (n1_);
+        T n2 = std::abs (n2_);
+
         T res;
 
-        while (n1 > T{1} and n2 > T{1} and !equal(n1, n2))
+        while (!equal(n1, n2))
         {
+            if (n1 < 1 or n2 < 1)
+                return n2_;
+
             if (n1 > n2)
                 n1 = n1 - n2;
 
@@ -43,10 +52,14 @@ namespace matrix
     {
         T numerator, denominator;
 
-        frac_ (): numerator{0}, denominator{1} {}
-        frac_ (T N): numerator{N}, denominator{(T) 1} {}
-        frac_ (T N, T D): numerator{N}, denominator{D} 
+        frac_ (T N = T{0}, T D = T{1}): numerator{N}, denominator{D} 
         {
+            if (denominator < 0)
+            {
+                numerator = -numerator;
+                denominator = -denominator;
+            }
+
             reduction();
         }
 
@@ -62,8 +75,16 @@ namespace matrix
         {
             frac_ <T> res;
             
-            res.numerator = numerator * rhs.denominator + rhs.numerator * denominator;
-            res.denominator = denominator * rhs.denominator;
+            T tmp1 = nod (denominator, rhs.denominator);
+
+            T new_denominator = denominator / tmp1;
+            new_denominator *= rhs.denominator;
+
+            T tmp2 = denominator / tmp1;
+            T tmp3 = rhs.denominator / tmp1;
+
+            res.numerator = numerator * tmp3 + rhs.denominator * tmp2;
+            res.denominator = new_denominator;
             
             res.reduction();
 
@@ -74,9 +95,17 @@ namespace matrix
         {
             frac_ <T> res;
 
-            res.numerator = numerator * rhs.denominator - rhs.numerator * denominator;
-            res.denominator = denominator * rhs.denominator;
-            
+            T tmp1 = nod (denominator, rhs.denominator);
+
+            T new_denominator = denominator / tmp1;
+            new_denominator *= rhs.denominator;
+
+            T tmp2 = denominator / tmp1;
+            T tmp3 = rhs.denominator / tmp1;
+
+            res.numerator = numerator * tmp3 - rhs.numerator * tmp2;
+            res.denominator = new_denominator;
+
             res.reduction();
             
             return res;
@@ -86,8 +115,14 @@ namespace matrix
         {
             frac_ <T> res;
 
-            res.numerator = numerator * rhs.numerator;
-            res.denominator = denominator * rhs.denominator;
+            T tmp1 = nod (numerator, rhs.denominator);
+            T tmp2 = nod (denominator, rhs.numerator);
+            
+            res.numerator = numerator / tmp1;
+            res.numerator *= rhs.numerator / tmp2;
+
+            res.denominator = denominator / tmp2;
+            res.denominator *= rhs.denominator / tmp1;
 
             res.reduction();
 
@@ -108,8 +143,20 @@ namespace matrix
         {
             frac_ <T> res;
 
-            res.numerator = numerator * rhs.denominator;
-            res.denominator = denominator * rhs.numerator;
+            T tmp1 = nod (numerator, rhs.numerator);
+            T tmp2 = nod (denominator, rhs.denominator);
+
+            res.numerator = numerator / tmp1;
+            res.numerator *= rhs.denominator / tmp2;
+
+            res.denominator = denominator / tmp2;
+            res.denominator *= rhs.numerator / tmp1;
+
+            if (res.denominator < 0)
+            {
+                res.numerator = -res.numerator;
+                res.denominator = -res.denominator;
+            }
             
             res.reduction();
             
@@ -241,7 +288,7 @@ namespace matrix
 
         const T& operator [] (int x) const
         {
-            return elements[x % size];
+            return elements[(x % size + size) % size];
         }
 
         row_ <T> operator + (const row_ &rhs) const
@@ -321,9 +368,28 @@ namespace matrix
                 elements[i] = row_ <T> {Size};
         }
 
+        template <typename It>
+        matrix_ (It start, It end, size_t Size)
+        {
+            (*this) = matrix_ <T> {Size};
+
+            size_t i = 0, j = 0;
+
+            for (i = 0; i < Size and start != end; ++i)
+                for (j = 0; j < Size and start != end; ++j)
+                {
+                    (*this)[i][j] = *start;
+                    ++start;
+                }
+
+            for (; i < Size; ++i)
+                for (; j < Size; ++j)
+                    (*this)[i][j] = T {0};
+        }
+
         row_ <T> & operator [] (int x)
         {
-            return elements[x % size];
+            return elements[(x % size + size) % size];
         }
 
         const row_ <T> & operator [] (int x) const
@@ -363,11 +429,10 @@ namespace matrix
         }
 
         int fill ();
-        int fill (const std::vector <T> &Vec);
 
         int g_elimination ();
 
-        T get_det (int sign) const;
+        T get_det (int sign = 1) const;
     };
 
     template <typename T>
@@ -375,7 +440,7 @@ namespace matrix
     {
         for (size_t i = 0; i < M.get_size(); ++i)
         {
-            out << "{";
+            out << "";
 
             for (size_t j = 0; j < M.get_size(); ++j)
             {
@@ -385,7 +450,7 @@ namespace matrix
                     out << " ";
             }
 
-            out << "}\n";
+            out << "\n";
         }
 
         return out;

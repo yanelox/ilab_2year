@@ -1,9 +1,9 @@
 count_test=10
 
-make gen
+make gen.out
 
 for ((i=1;i<=$count_test;i++))
 do
-./gen > tests/$i.test 
+./gen.out > tests/$i.test 
 done
 
