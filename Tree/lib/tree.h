@@ -3,6 +3,11 @@
 
 namespace tree
 {
+    enum flags
+    {
+        poison = 424242
+    };
+
     struct node_
     {
         node_ *left = nullptr, *right = nullptr, *parent = nullptr;
@@ -11,13 +16,17 @@ namespace tree
 
         size_t lsize = 0, rsize = 0;
 
+        size_t lheight = 0, rheight = 0;
+
         node_ () = default;
 
         ~node_ () = default;
+
+        node_ *balancing ();
     };
 
     class Tree_
-    {public:
+    {
         node_ *top = nullptr;
 
         void help_print (std::fstream &s, node_ *top) const;
@@ -33,38 +42,114 @@ namespace tree
             top->number = n;
         }
 
-        ~Tree_ ()
+        Tree_ (const Tree_ &rhs)
         {
+            top = new node_;
+
             node_ *cur = top;
-            node_ *for_del = nullptr;
+            node_ *cur_p = nullptr;
+            node_ *cur_rhs = rhs.top;
 
-            while(true)
+            while (true)
             {
-                if (cur->left != nullptr)
-                    cur = cur->left;
+                cur->number = cur_rhs->number;
+                cur->lsize = cur_rhs->lsize;
+                cur->rsize = cur_rhs->rsize;
+                cur->parent = cur_p;
+                
 
-                else if (cur->right != nullptr)
-                    cur = cur->right;
-
-                else if (cur->parent != nullptr)
+                if (cur_rhs->left != nullptr and cur->left == nullptr)
                 {
-                    for_del = cur;
+                    cur->left = new node_;
 
-                    cur = cur->parent;
+                    cur_p = cur;
 
-                    if (cur->left == for_del)
-                        cur->left = nullptr;
+                    cur = cur->left;
+                    cur_rhs = cur_rhs->left;
+                }
 
-                    else if (cur->right == for_del)
-                        cur->right = nullptr;
+                else if (cur_rhs->right != nullptr and cur->right == nullptr)
+                {
+                    cur->right = new node_;
 
-                    delete for_del;
+                    cur_p = cur;
+
+                    cur = cur->right;
+                    cur_rhs = cur_rhs->right;
                 }
 
                 else
+                    if (cur_rhs->parent != nullptr)
+                    {
+                        cur = cur->parent;
+                        cur_rhs = cur_rhs->parent;
+                    }
+
+                    else
+                        break;
+            }
+        }
+
+        Tree_ (Tree_ &&rhs): top{rhs.top} 
+        {
+            rhs.top = nullptr;
+        }
+
+        Tree_ & operator = (Tree_ &rhs)
+        {
+            if (this == &rhs)
+                return *this;
+
+            std::swap (rhs.top, top);
+
+            return *this;
+        }
+
+        Tree_ & operator = (Tree_ &&rhs)
+        {
+            if (this == &rhs)
+                return *this;
+
+            std::swap (top, rhs.top);
+
+            return *this;
+        }
+
+        ~Tree_ ()
+        {
+            if (top != nullptr)
+            {
+                node_ *cur = top;
+                node_ *for_del = nullptr;
+
+                while(true)
                 {
-                    delete cur;
-                    break;
+                    if (cur->left != nullptr)
+                        cur = cur->left;
+
+                    else if (cur->right != nullptr)
+                        cur = cur->right;
+
+                    else if (cur->parent != nullptr)
+                    {
+                        for_del = cur;
+
+                        cur = cur->parent;
+
+                        if (cur->left == for_del)
+                            cur->left = nullptr;
+
+                        else if (cur->right == for_del)
+                            cur->right = nullptr;
+
+                        delete for_del;
+                    }
+
+                    else
+                    {
+                        delete cur;
+                        break;
+                    }
                 }
             }
         }
@@ -72,5 +157,9 @@ namespace tree
         int push (int n);
 
         void fprint (std::string filename) const;
+
+        size_t k_min (int k) const;
+
+        size_t m_less (int m) const;
     };
 }
