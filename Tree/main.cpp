@@ -35,7 +35,7 @@ int main ()
 
     std::cout << std::endl;
 
-    t.fprint ("graph.dot");
+    // t.fprint ("graph.dot");
 
     return 0;
 }
