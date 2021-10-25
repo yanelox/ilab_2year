@@ -1,19 +1,19 @@
 digraph graphname {
-1 [label="number = 1
-lsize = 0
-rsize = 0
-lheight = 0
-rheight = 0
-"]
-1 -> 0;
-0 [label="number = 0
-lsize = 0
-rsize = 0
-lheight = 0
-rheight = 0
-"]
-1 -> 2;
 2 [label="number = 2
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+2 -> -1;
+-1 [label="number = -1
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+2 -> 8;
+8 [label="number = 8
 lsize = 0
 rsize = 0
 lheight = 0

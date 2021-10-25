@@ -295,7 +295,7 @@ namespace tree
         s << "}";
     }
 
-    size_t Tree_::k_min (int k) const
+    int Tree_::k_min (int k) const
     {
         if (top == nullptr)
             return poison;

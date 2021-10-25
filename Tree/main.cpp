@@ -1,16 +1,41 @@
 #include "lib/tree.hpp"
+#include <vector>
 
 int main ()
 {
-    tree::Tree_ t{}, t1{};
+    tree::Tree_ t{};
 
-    t.push (2);
-    t.push (0);
-    t.push (1);
+    char c = 0;
+    int n = 0;
 
-    t1 = t;
+    std::vector <int> res{};
+    
+    while (!std::cin.eof())
+    {
+        std::cin >> c;
+        
+        if (std::cin.eof())
+            break;
 
-    t1.fprint ("graph.dot");
+        else
+            std::cin >> n;
+
+        if (c == 'k')
+            t.push (n);
+
+        else if (c == 'm')
+            res.push_back (t.k_min (n));
+
+        else if (c == 'n')
+            res.push_back (t.m_less (n));
+    }
+
+    for (auto i:res)
+        std::cout << i << " ";
+
+    std::cout << std::endl;
+
+    t.fprint ("graph.dot");
 
     return 0;
 }

@@ -158,7 +158,7 @@ namespace tree
 
         void fprint (std::string filename) const;
 
-        size_t k_min (int k) const;
+        int k_min (int k) const;
 
         size_t m_less (int m) const;
     };
