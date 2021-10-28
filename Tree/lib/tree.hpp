@@ -11,153 +11,172 @@ namespace tree
     node_ * node_::balancing ()
     {
         node_ *res = nullptr;
-        node_ *tmp = nullptr;
 
         if (rheight == (lheight + 2) and right->lheight <= right->rheight)
-        {
-            res = right;
-
-            right = right->left;    
-
-            if (right != nullptr)
-            {
-                right->parent = this;
-                rsize = right->lsize + right->rsize + 1;
-                rheight = 1 + std::max (right->rheight, right->lheight);
-            }
-            else
-            {
-                rheight = 0;
-                rsize = 0;
-            }
-        
-            res->left = this;
-            res->parent = parent;
-            
-            parent = res;
-        
-            res->lsize = lsize + rsize + 1;
-            res->lheight = 1 + std::max (lheight, rheight);
-        }
+            res = little_left_r ();
 
         else if (rheight == (lheight + 2) and right->lheight > right->rheight)
-        {
-            res = right->left; 
-
-            tmp = right; 
-
-            right = right->left->left; 
-
-            if (right != nullptr)
-            {
-                right->parent = this;
-                rsize = right->lsize + right->rsize + 1;
-                rheight = 1 + std::max (right->rheight, right->lheight);
-            }
-
-            else
-            {
-                rsize = 0;
-                rheight = 0;
-            }
-
-            tmp->left = res->right;
-
-            if (tmp->left != nullptr)
-            {
-                tmp->left->parent = tmp;
-                tmp->lsize = tmp->left->lsize + tmp->left->rsize + 1;
-                tmp->lheight = 1 + std::max (tmp->left->lheight, tmp->left->rheight);
-            }
-
-            else
-            {
-                tmp->lsize = 0;
-                tmp->lheight = 0;
-            }
-
-            res->parent = parent;
-
-            res->left = this;
-            res->right = tmp;
-
-            parent = res;
-            tmp->parent = res;
-        }
+            res = big_left_r ();
 
         else if (lheight == (rheight + 2) and left->rheight <= left->lheight)
-        {
-            res = left;
-
-            left = left->right;
-
-            if (left != nullptr)
-            {
-                left->parent = this;
-                lsize = left->lsize + left->rsize + 1;
-                lheight = 1 + std::max (left->lheight, left->rheight);
-            }
-
-            else
-            {
-                lheight = 0;
-                lsize = 0;
-            }
-
-            res->right = this;
-            res->parent = parent;
-
-            parent = res;
-
-            res->rsize = lsize + rsize + 1;
-            res->rheight = 1 + std::max (lheight, rheight);
-        }
+            res = little_right_r ();
 
         else if (lheight == (rheight + 2) and left->rheight > left->lheight)
-        {
-            res = left->right; //c
-
-            tmp = left; //b
-
-            left = left->right->right;
-
-            if (left != nullptr)
-            {
-                left->parent = this;
-                lsize = left->lsize + left->rsize + 1;
-                lheight = 1 + std::max (left->lheight, left->rheight);
-            }
-
-            else
-            {
-                lsize = 0;
-                lheight = 0;
-            }
-
-            tmp->right = res->left;
-
-            if (tmp->right != nullptr)
-            {
-                tmp->right->parent = tmp;
-                tmp->rsize = tmp->right->lsize + tmp->right->rsize + 1;
-                tmp->rheight = 1 + std::max (tmp->right->lheight, tmp->right->rheight);
-            }
-
-            else
-            {
-                tmp->rsize = 0;
-                tmp->rheight = 0;
-            }
-
-            res->parent = parent;
-
-            res->left = tmp;
-            res->right = this;
-
-            parent = res;
-            tmp->parent = res;
-        }
+            res = big_right_r ();
         
+        return res;
+    }
+
+    node_* node_::little_left_r ()
+    {
+        node_ *res = right;
+
+        right = right->left;    
+
+        if (right != nullptr)
+        {
+            right->parent = this;
+            rsize = right->lsize + right->rsize + 1;
+            rheight = 1 + std::max (right->rheight, right->lheight);
+        }
+        else
+        {
+            rheight = 0;
+            rsize = 0;
+        }
+    
+        res->left = this;
+        res->parent = parent;
+        
+        parent = res;
+    
+        res->lsize = lsize + rsize + 1;
+        res->lheight = 1 + std::max (lheight, rheight);
+
+        return res;
+    }
+
+    node_* node_::big_left_r ()
+    {
+        node_ *res = right->left; 
+
+        node_ *tmp = right; 
+
+        right = right->left->left; 
+
+        if (right != nullptr)
+        {
+            right->parent = this;
+            rsize = right->lsize + right->rsize + 1;
+            rheight = 1 + std::max (right->rheight, right->lheight);
+        }
+
+        else
+        {
+            rsize = 0;
+            rheight = 0;
+        }
+
+        tmp->left = res->right;
+
+        if (tmp->left != nullptr)
+        {
+            tmp->left->parent = tmp;
+            tmp->lsize = tmp->left->lsize + tmp->left->rsize + 1;
+            tmp->lheight = 1 + std::max (tmp->left->lheight, tmp->left->rheight);
+        }
+
+        else
+        {
+            tmp->lsize = 0;
+            tmp->lheight = 0;
+        }
+
+        res->parent = parent;
+
+        res->left = this;
+        res->right = tmp;
+
+        parent = res;
+        tmp->parent = res;
+
+        return res;
+    }
+
+    node_* node_::little_right_r ()
+    {
+        node_ *res = left;
+
+        left = left->right;
+
+        if (left != nullptr)
+        {
+            left->parent = this;
+            lsize = left->lsize + left->rsize + 1;
+            lheight = 1 + std::max (left->lheight, left->rheight);
+        }
+
+        else
+        {
+            lheight = 0;
+            lsize = 0;
+        }
+
+        res->right = this;
+        res->parent = parent;
+
+        parent = res;
+
+        res->rsize = lsize + rsize + 1;
+        res->rheight = 1 + std::max (lheight, rheight);
+
+        return res;
+    }
+
+    node_* node_::big_right_r ()
+    {
+        node_ *res = left->right; 
+
+        node_ *tmp = left; 
+
+        left = left->right->right;
+
+        if (left != nullptr)
+        {
+            left->parent = this;
+            lsize = left->lsize + left->rsize + 1;
+            lheight = 1 + std::max (left->lheight, left->rheight);
+        }
+
+        else
+        {
+            lsize = 0;
+            lheight = 0;
+        }
+
+        tmp->right = res->left;
+
+        if (tmp->right != nullptr)
+        {
+            tmp->right->parent = tmp;
+            tmp->rsize = tmp->right->lsize + tmp->right->rsize + 1;
+            tmp->rheight = 1 + std::max (tmp->right->lheight, tmp->right->rheight);
+        }
+
+        else
+        {
+            tmp->rsize = 0;
+            tmp->rheight = 0;
+        }
+
+        res->parent = parent;
+
+        res->left = tmp;
+        res->right = this;
+
+        parent = res;
+        tmp->parent = res;
+
         return res;
     }
 
@@ -167,6 +186,7 @@ namespace tree
     {
         node_ *cur = nullptr;
         node_ *res = nullptr;
+        ++size;
 
         if (top == nullptr)
         {
@@ -298,7 +318,7 @@ namespace tree
     int Tree_::k_min (int k) const
     {
         if (top == nullptr)
-            return poison;
+            return 0;
 
         node_ *cur = top;
         int res = top->number;
@@ -321,13 +341,13 @@ namespace tree
                 break;
         }
 
-        return poison;
+        return 0;
     }
 
     size_t Tree_::m_less (int m) const
     {
         if (top == nullptr)
-            return poison;
+            return 0;
 
         size_t res = 0;
         node_ *cur = top;
@@ -362,5 +382,10 @@ namespace tree
         }
 
         return res;
+    }
+
+    size_t Tree_::get_size () const
+    {
+        return size;
     }
 }

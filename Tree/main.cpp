@@ -24,7 +24,16 @@ int main ()
             t.push (n);
 
         else if (c == 'm')
+        {
+            if (n > t.get_size())
+            {
+                printf ("Incorrect input\n");
+
+                return 0;
+            }
+
             res.push_back (t.k_min (n));
+        }
 
         else if (c == 'n')
             res.push_back (t.m_less (n));
@@ -35,7 +44,7 @@ int main ()
 
     std::cout << std::endl;
 
-    // t.fprint ("graph.dot");
+    t.fprint ("graph.dot");
 
     return 0;
 }

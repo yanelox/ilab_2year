@@ -3,11 +3,6 @@
 
 namespace tree
 {
-    enum flags
-    {
-        poison = 424242
-    };
-
     struct node_
     {
         node_ *left = nullptr, *right = nullptr, *parent = nullptr;
@@ -23,11 +18,19 @@ namespace tree
         ~node_ () = default;
 
         node_ *balancing ();
+
+        node_ *little_left_r ();
+        node_ *big_left_r ();
+        node_ *little_right_r ();
+        node_ *big_right_r ();
+
     };
 
     class Tree_
     {
         node_ *top = nullptr;
+
+        size_t size = 0;
 
         void help_print (std::fstream &s, node_ *top) const;
 
@@ -35,16 +38,10 @@ namespace tree
 
         Tree_ () = default;
 
-        Tree_ (int n)
-        {
-            top = new node_;
-
-            top->number = n;
-        }
-
         Tree_ (const Tree_ &rhs)
         {
             top = new node_;
+            size = rhs.size;
 
             node_ *cur = top;
             node_ *cur_p = nullptr;
@@ -90,7 +87,7 @@ namespace tree
             }
         }
 
-        Tree_ (Tree_ &&rhs): top{rhs.top} 
+        Tree_ (Tree_ &&rhs): top{rhs.top}, size{rhs.size}
         {
             rhs.top = nullptr;
         }
@@ -100,7 +97,53 @@ namespace tree
             if (this == &rhs)
                 return *this;
 
-            std::swap (rhs.top, top);
+            delete top;
+
+            top = new node_;
+            size = rhs.size;
+
+            node_ *cur = top;
+            node_ *cur_p = nullptr;
+            node_ *cur_rhs = rhs.top;
+
+            while (true)
+            {
+                cur->number = cur_rhs->number;
+                cur->lsize = cur_rhs->lsize;
+                cur->rsize = cur_rhs->rsize;
+                cur->parent = cur_p;
+                
+
+                if (cur_rhs->left != nullptr and cur->left == nullptr)
+                {
+                    cur->left = new node_;
+
+                    cur_p = cur;
+
+                    cur = cur->left;
+                    cur_rhs = cur_rhs->left;
+                }
+
+                else if (cur_rhs->right != nullptr and cur->right == nullptr)
+                {
+                    cur->right = new node_;
+
+                    cur_p = cur;
+
+                    cur = cur->right;
+                    cur_rhs = cur_rhs->right;
+                }
+
+                else
+                    if (cur_rhs->parent != nullptr)
+                    {
+                        cur = cur->parent;
+                        cur_rhs = cur_rhs->parent;
+                    }
+
+                    else
+                        break;
+            }
 
             return *this;
         }
@@ -110,7 +153,8 @@ namespace tree
             if (this == &rhs)
                 return *this;
 
-            std::swap (top, rhs.top);
+            top = rhs.top;
+            size = rhs.size;
 
             return *this;
         }
@@ -161,5 +205,7 @@ namespace tree
         int k_min (int k) const;
 
         size_t m_less (int m) const;
+
+        size_t get_size () const;
     };
 }
