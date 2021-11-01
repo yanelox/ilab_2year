@@ -1,6 +1,12 @@
 #include "lib/tree.hpp"
 #include <vector>
 
+#ifdef DUMP
+#define WORK_MOD 1
+#else
+#define WORK_MOD 0
+#endif
+
 int main ()
 {
     tree::Tree_ t{};
@@ -44,7 +50,8 @@ int main ()
 
     std::cout << std::endl;
 
-    t.fprint ("graph.dot");
+    if (WORK_MOD)
+        t.fprint ("graph.dot");
 
     return 0;
 }

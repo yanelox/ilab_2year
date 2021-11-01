@@ -1,1 +1,1 @@
-dot -v -Tpng -ograph.png graph.dot 
+dot -v -Tsvg -ograph.svg graph.dot 

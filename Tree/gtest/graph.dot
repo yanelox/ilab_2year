@@ -1,0 +1,701 @@
+digraph graphname {
+63[label="number = 63
+lsize = 63
+rsize = 36
+lheight = 6
+rheight = 6
+"]
+63 -> 31;
+31[label="number = 31
+lsize = 31
+rsize = 31
+lheight = 5
+rheight = 5
+"]
+31 -> 15;
+15[label="number = 15
+lsize = 15
+rsize = 15
+lheight = 4
+rheight = 4
+"]
+15 -> 7;
+7[label="number = 7
+lsize = 7
+rsize = 7
+lheight = 3
+rheight = 3
+"]
+7 -> 3;
+3[label="number = 3
+lsize = 3
+rsize = 3
+lheight = 2
+rheight = 2
+"]
+3 -> 1;
+1[label="number = 1
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+1 -> 0;
+0[label="number = 0
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+1 -> 2;
+2[label="number = 2
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+3 -> 5;
+5[label="number = 5
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+5 -> 4;
+4[label="number = 4
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+5 -> 6;
+6[label="number = 6
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+7 -> 11;
+11[label="number = 11
+lsize = 3
+rsize = 3
+lheight = 2
+rheight = 2
+"]
+11 -> 9;
+9[label="number = 9
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+9 -> 8;
+8[label="number = 8
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+9 -> 10;
+10[label="number = 10
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+11 -> 13;
+13[label="number = 13
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+13 -> 12;
+12[label="number = 12
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+13 -> 14;
+14[label="number = 14
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+15 -> 23;
+23[label="number = 23
+lsize = 7
+rsize = 7
+lheight = 3
+rheight = 3
+"]
+23 -> 19;
+19[label="number = 19
+lsize = 3
+rsize = 3
+lheight = 2
+rheight = 2
+"]
+19 -> 17;
+17[label="number = 17
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+17 -> 16;
+16[label="number = 16
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+17 -> 18;
+18[label="number = 18
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+19 -> 21;
+21[label="number = 21
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+21 -> 20;
+20[label="number = 20
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+21 -> 22;
+22[label="number = 22
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+23 -> 27;
+27[label="number = 27
+lsize = 3
+rsize = 3
+lheight = 2
+rheight = 2
+"]
+27 -> 25;
+25[label="number = 25
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+25 -> 24;
+24[label="number = 24
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+25 -> 26;
+26[label="number = 26
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+27 -> 29;
+29[label="number = 29
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+29 -> 28;
+28[label="number = 28
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+29 -> 30;
+30[label="number = 30
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+31 -> 47;
+47[label="number = 47
+lsize = 15
+rsize = 15
+lheight = 4
+rheight = 4
+"]
+47 -> 39;
+39[label="number = 39
+lsize = 7
+rsize = 7
+lheight = 3
+rheight = 3
+"]
+39 -> 35;
+35[label="number = 35
+lsize = 3
+rsize = 3
+lheight = 2
+rheight = 2
+"]
+35 -> 33;
+33[label="number = 33
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+33 -> 32;
+32[label="number = 32
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+33 -> 34;
+34[label="number = 34
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+35 -> 37;
+37[label="number = 37
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+37 -> 36;
+36[label="number = 36
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+37 -> 38;
+38[label="number = 38
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+39 -> 43;
+43[label="number = 43
+lsize = 3
+rsize = 3
+lheight = 2
+rheight = 2
+"]
+43 -> 41;
+41[label="number = 41
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+41 -> 40;
+40[label="number = 40
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+41 -> 42;
+42[label="number = 42
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+43 -> 45;
+45[label="number = 45
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+45 -> 44;
+44[label="number = 44
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+45 -> 46;
+46[label="number = 46
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+47 -> 55;
+55[label="number = 55
+lsize = 7
+rsize = 7
+lheight = 3
+rheight = 3
+"]
+55 -> 51;
+51[label="number = 51
+lsize = 3
+rsize = 3
+lheight = 2
+rheight = 2
+"]
+51 -> 49;
+49[label="number = 49
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+49 -> 48;
+48[label="number = 48
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+49 -> 50;
+50[label="number = 50
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+51 -> 53;
+53[label="number = 53
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+53 -> 52;
+52[label="number = 52
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+53 -> 54;
+54[label="number = 54
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+55 -> 59;
+59[label="number = 59
+lsize = 3
+rsize = 3
+lheight = 2
+rheight = 2
+"]
+59 -> 57;
+57[label="number = 57
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+57 -> 56;
+56[label="number = 56
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+57 -> 58;
+58[label="number = 58
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+59 -> 61;
+61[label="number = 61
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+61 -> 60;
+60[label="number = 60
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+61 -> 62;
+62[label="number = 62
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+63 -> 79;
+79[label="number = 79
+lsize = 15
+rsize = 20
+lheight = 4
+rheight = 5
+"]
+79 -> 71;
+71[label="number = 71
+lsize = 7
+rsize = 7
+lheight = 3
+rheight = 3
+"]
+71 -> 67;
+67[label="number = 67
+lsize = 3
+rsize = 3
+lheight = 2
+rheight = 2
+"]
+67 -> 65;
+65[label="number = 65
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+65 -> 64;
+64[label="number = 64
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+65 -> 66;
+66[label="number = 66
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+67 -> 69;
+69[label="number = 69
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+69 -> 68;
+68[label="number = 68
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+69 -> 70;
+70[label="number = 70
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+71 -> 75;
+75[label="number = 75
+lsize = 3
+rsize = 3
+lheight = 2
+rheight = 2
+"]
+75 -> 73;
+73[label="number = 73
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+73 -> 72;
+72[label="number = 72
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+73 -> 74;
+74[label="number = 74
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+75 -> 77;
+77[label="number = 77
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+77 -> 76;
+76[label="number = 76
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+77 -> 78;
+78[label="number = 78
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+79 -> 87;
+87[label="number = 87
+lsize = 7
+rsize = 12
+lheight = 3
+rheight = 4
+"]
+87 -> 83;
+83[label="number = 83
+lsize = 3
+rsize = 3
+lheight = 2
+rheight = 2
+"]
+83 -> 81;
+81[label="number = 81
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+81 -> 80;
+80[label="number = 80
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+81 -> 82;
+82[label="number = 82
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+83 -> 85;
+85[label="number = 85
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+85 -> 84;
+84[label="number = 84
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+85 -> 86;
+86[label="number = 86
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+87 -> 95;
+95[label="number = 95
+lsize = 7
+rsize = 4
+lheight = 3
+rheight = 3
+"]
+95 -> 91;
+91[label="number = 91
+lsize = 3
+rsize = 3
+lheight = 2
+rheight = 2
+"]
+91 -> 89;
+89[label="number = 89
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+89 -> 88;
+88[label="number = 88
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+89 -> 90;
+90[label="number = 90
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+91 -> 93;
+93[label="number = 93
+lsize = 1
+rsize = 1
+lheight = 1
+rheight = 1
+"]
+93 -> 92;
+92[label="number = 92
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+93 -> 94;
+94[label="number = 94
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+95 -> 97;
+97[label="number = 97
+lsize = 1
+rsize = 2
+lheight = 1
+rheight = 2
+"]
+97 -> 96;
+96[label="number = 96
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+97 -> 98;
+98[label="number = 98
+lsize = 0
+rsize = 1
+lheight = 0
+rheight = 1
+"]
+98 -> 99;
+99[label="number = 99
+lsize = 0
+rsize = 0
+lheight = 0
+rheight = 0
+"]
+}

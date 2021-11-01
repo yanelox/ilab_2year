@@ -1,5 +1,8 @@
 #include <iostream>
 #include <string>
+#include <sstream>
+#include <fstream>
+#include <utility>
 
 namespace tree
 {
@@ -13,9 +16,33 @@ namespace tree
 
         size_t lheight = 0, rheight = 0;
 
-        node_ () = default;
+        bool operator == (const node_ &rhs)
+        {
+            if (this == &rhs)
+                return true;
 
-        ~node_ () = default;
+            bool res = true;
+
+            if (lsize != rhs.lsize or rsize != rhs.rsize or
+                lheight != rhs.lheight or rheight != rhs.rheight)
+                return false;
+
+            if (left == nullptr and rhs.left != nullptr or 
+                left != nullptr and rhs.left == nullptr)
+                return false;
+
+            if (left != nullptr and rhs.left != nullptr)
+                res *= ((*left) == (*rhs.left));
+
+            if (right == nullptr and rhs.right != nullptr or
+                right != nullptr and rhs.right == nullptr)
+                return false;
+
+            if (right != nullptr and rhs.right != nullptr)
+                res *= ((*right) == (*rhs.right));
+
+            return res;
+        }
 
         node_ *balancing ();
 
@@ -32,7 +59,7 @@ namespace tree
 
         size_t size = 0;
 
-        void help_print (std::fstream &s, node_ *top) const;
+        void help_print (std::ofstream &s, node_ *top) const;
 
         public:
 
@@ -44,22 +71,15 @@ namespace tree
             size = rhs.size;
 
             node_ *cur = top;
-            node_ *cur_p = nullptr;
             node_ *cur_rhs = rhs.top;
 
             while (true)
             {
-                cur->number = cur_rhs->number;
-                cur->lsize = cur_rhs->lsize;
-                cur->rsize = cur_rhs->rsize;
-                cur->parent = cur_p;
-                
-
                 if (cur_rhs->left != nullptr and cur->left == nullptr)
                 {
                     cur->left = new node_;
 
-                    cur_p = cur;
+                    cur->left->parent = cur;
 
                     cur = cur->left;
                     cur_rhs = cur_rhs->left;
@@ -69,14 +89,21 @@ namespace tree
                 {
                     cur->right = new node_;
 
-                    cur_p = cur;
+                    cur->right->parent = cur;
 
                     cur = cur->right;
                     cur_rhs = cur_rhs->right;
                 }
 
                 else
-                    if (cur_rhs->parent != nullptr)
+                {
+                    cur->lheight = cur_rhs->lheight;
+                    cur->rheight = cur_rhs->rheight;
+                    cur->lsize = cur_rhs->lsize;
+                    cur->rsize = cur_rhs->rsize;
+                    cur->number = cur_rhs->number;
+                    
+                    if (cur_rhs->parent != nullptr and cur->parent != nullptr)
                     {
                         cur = cur->parent;
                         cur_rhs = cur_rhs->parent;
@@ -84,6 +111,7 @@ namespace tree
 
                     else
                         break;
+                }
             }
         }
 
@@ -92,58 +120,14 @@ namespace tree
             rhs.top = nullptr;
         }
 
-        Tree_ & operator = (Tree_ &rhs)
+        Tree_ & operator = (const Tree_ &rhs)
         {
             if (this == &rhs)
                 return *this;
+            
+            Tree_ tmp {rhs};
 
-            delete top;
-
-            top = new node_;
-            size = rhs.size;
-
-            node_ *cur = top;
-            node_ *cur_p = nullptr;
-            node_ *cur_rhs = rhs.top;
-
-            while (true)
-            {
-                cur->number = cur_rhs->number;
-                cur->lsize = cur_rhs->lsize;
-                cur->rsize = cur_rhs->rsize;
-                cur->parent = cur_p;
-                
-
-                if (cur_rhs->left != nullptr and cur->left == nullptr)
-                {
-                    cur->left = new node_;
-
-                    cur_p = cur;
-
-                    cur = cur->left;
-                    cur_rhs = cur_rhs->left;
-                }
-
-                else if (cur_rhs->right != nullptr and cur->right == nullptr)
-                {
-                    cur->right = new node_;
-
-                    cur_p = cur;
-
-                    cur = cur->right;
-                    cur_rhs = cur_rhs->right;
-                }
-
-                else
-                    if (cur_rhs->parent != nullptr)
-                    {
-                        cur = cur->parent;
-                        cur_rhs = cur_rhs->parent;
-                    }
-
-                    else
-                        break;
-            }
+            *this = std::move (tmp);
 
             return *this;
         }
@@ -156,7 +140,23 @@ namespace tree
             top = rhs.top;
             size = rhs.size;
 
+            rhs.top = nullptr;
+
             return *this;
+        }
+
+        bool operator == (const Tree_ &rhs) const
+        {
+            if (this == &rhs)
+                return true;
+
+            if (top == nullptr and rhs.top == nullptr)
+                return true;
+
+            if (top == nullptr or rhs.top == nullptr)
+                return false;
+
+            return ((*top) == (*rhs.top));
         }
 
         ~Tree_ ()

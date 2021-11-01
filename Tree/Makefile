@@ -6,3 +6,6 @@ tree.out: main.cpp lib/tree.h lib/tree.hpp
 
 gen.out: gen.cpp
 	$(CXX) $(CXXFLAGS) $<
+
+debug.out: main.cpp lib/tree.h lib/tree.hpp
+	$(CXX) $(CXXFLAGS) -DDEBUG $<

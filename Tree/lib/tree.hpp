@@ -279,14 +279,19 @@ namespace tree
         return 0;
     }
 
-    void Tree_::help_print (std::fstream &s, node_ *top) const
+    void Tree_::help_print (std::ofstream &s, node_ *top) const
     {
-        char label[256];
-        label[0] = '\0';
+        std::ostringstream buf;
 
-        sprintf (label, "number = %d\nlsize = %zu\nrsize = %zu\nlheight = %zu\nrheight = %zu\n", top->number, top->lsize, top->rsize, top->lheight, top->rheight);
+        buf << top->number << "[label=\"";
+        buf << "number = " << top->number << std::endl;
+        buf << "lsize = " << top->lsize << std::endl;
+        buf << "rsize = " << top->rsize << std::endl;
+        buf << "lheight = " << top->lheight << std::endl;
+        buf << "rheight = " << top->rheight << std::endl;
+        buf << "\"]" << std::endl;
 
-        s << top->number << " [label=\"" << label << "\"]\n";
+        s << buf.str();
 
         if (top->left != nullptr)
         {
@@ -306,7 +311,7 @@ namespace tree
         if (top == nullptr)
             return;
 
-        std::fstream s (filename, s.binary | s.trunc | s.in | s.out);
+        std::ofstream s (filename);
 
         s << "digraph graphname {" << std::endl;
 

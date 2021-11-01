@@ -1,0 +1,7 @@
+add_test( TestTree_.Operator_equal [==[/media/yanelox/Новый том/linux_work/ilab_2year/Tree/gtest/build/my_test]==] [==[--gtest_filter=TestTree_.Operator_equal]==] --gtest_also_run_disabled_tests)
+set_tests_properties( TestTree_.Operator_equal PROPERTIES WORKING_DIRECTORY [==[/media/yanelox/Новый том/linux_work/ilab_2year/Tree/gtest/build]==])
+add_test( TestTree_.CopyConstruct [==[/media/yanelox/Новый том/linux_work/ilab_2year/Tree/gtest/build/my_test]==] [==[--gtest_filter=TestTree_.CopyConstruct]==] --gtest_also_run_disabled_tests)
+set_tests_properties( TestTree_.CopyConstruct PROPERTIES WORKING_DIRECTORY [==[/media/yanelox/Новый том/linux_work/ilab_2year/Tree/gtest/build]==])
+add_test( TestTree_.Operator_assignment [==[/media/yanelox/Новый том/linux_work/ilab_2year/Tree/gtest/build/my_test]==] [==[--gtest_filter=TestTree_.Operator_assignment]==] --gtest_also_run_disabled_tests)
+set_tests_properties( TestTree_.Operator_assignment PROPERTIES WORKING_DIRECTORY [==[/media/yanelox/Новый том/linux_work/ilab_2year/Tree/gtest/build]==])
+set( my_test_TESTS TestTree_.Operator_equal TestTree_.CopyConstruct TestTree_.Operator_assignment)
