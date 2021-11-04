@@ -218,9 +218,9 @@ namespace geom
 
         bool trl_intersect (const triangle_ &t) const;
 
-        int print (int tab_number = 0) const;
+        int print (int tab_number) const;
 
-        int print (int index, int tab_number = 0) const;
+        int print (int index, int tab_number) const;
     };
 
 

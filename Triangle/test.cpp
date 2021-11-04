@@ -1,4 +1,4 @@
-#include "triangle.hpp"
+#include "lib/triangle.hpp"
 
 void vector_test ()
 {
