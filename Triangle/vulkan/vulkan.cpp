@@ -18,6 +18,8 @@
 #include <optional>
 #include <set>
 
+namespace vulkan
+{
 const uint32_t WIDTH = 800;
 const uint32_t HEIGHT = 600;
 
@@ -116,18 +118,78 @@ struct UniformBufferObject
     alignas(16) glm::mat4 proj;
 };
 
-std::vector<Vertex> vertices = {
-    // {{-1.0f, -1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
-    // {{0.0f, -1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}},
-    // {{-0.1f, -0.1f, 0.0f}, {0.0f, 0.0f, 1.0f}},
-    // {{0.0f, 0.0f, 0.5f}, {1.0f, 0.0f, 0.0f}},
-    // {{1.0f, 0.0f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-    // {{1.0f, 1.0f, 0.5f}, {0.0f, 0.0f, 1.0f}}
-};
+std::vector<Vertex> vertices = {};
 
-std::vector<uint16_t> indices = {
-    // 0, 1, 2, 3, 4, 5
-};
+std::vector<uint16_t> indices = {};
+
+glm::vec3 camera_pos (2.0f, 2.0f, 2.0f);
+glm::vec3 camera_direction = glm::normalize (glm::vec3 {-1.0f, -1.0f, -1.0f});
+glm::vec3 camera_up (0.0f, 0.0f, 1.0f);
+double phi = glm::radians (225.0f), ksi = glm::radians (-35.26f);
+bool lpress = false;
+
+double prev_x = 0.0, prev_y = 0.0;
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    float cam_speed = 0.05f;
+
+    if (key == GLFW_KEY_RIGHT)
+    {
+        glm::vec3 tmp_vec = glm::normalize (glm::cross (camera_direction, camera_up)) * cam_speed;
+        camera_pos += tmp_vec;
+    }
+
+    else if (key == GLFW_KEY_LEFT)
+    {
+        glm::vec3 tmp_vec = glm::normalize (glm::cross (camera_direction, camera_up)) * cam_speed;
+        camera_pos -= tmp_vec;
+    }
+
+    if (key == GLFW_KEY_UP)
+    {
+        camera_pos += camera_direction * cam_speed;
+    }
+
+    else if (key == GLFW_KEY_DOWN)
+    {
+        camera_pos -= camera_direction * cam_speed;
+    }
+}
+
+static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (lpress)
+    {
+        double delta_x = xpos - prev_x;
+        double delta_y = ypos - prev_y;
+
+        prev_x = xpos;
+        prev_y = ypos;
+
+        double sensivity = 0.001;
+
+        phi -= delta_x * sensivity;
+        ksi -= delta_y * sensivity;
+
+        camera_direction = glm::vec3 (glm::cos (ksi) * glm::cos (phi), glm::cos (ksi) * glm::sin (phi), glm::sin (ksi));
+    }
+
+    else
+    {
+        prev_x = xpos;
+        prev_y = ypos;
+    }
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    if (button == GLFW_MOUSE_BUTTON_LEFT and action == GLFW_PRESS)
+        lpress = true;
+
+    else
+        lpress = false;
+}
 
 class HelloTriangleApplication 
 {
@@ -230,9 +292,14 @@ private:
 
     void mainLoop() 
     {
-        while (!glfwWindowShouldClose(window)) 
+        glfwGetCursorPos(window, &prev_x, &prev_y);
+
+        while (!glfwWindowShouldClose(window)) //TODO: починить поворот мыши
         {
             glfwPollEvents();
+            glfwSetKeyCallback(window, key_callback);
+            glfwSetMouseButtonCallback(window, mouse_button_callback);
+            glfwSetCursorPosCallback(window, cursor_position_callback);
             drawFrame();
         }
 
@@ -1076,9 +1143,9 @@ private:
         auto currentTime = std::chrono::high_resolution_clock::now();
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-        UniformBufferObject ubo{};
-        ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        UniformBufferObject ubo{}; 
+        ubo.model = glm::mat4 (1.0f);
+        ubo.view = glm::lookAt (camera_pos, camera_pos + camera_direction, camera_up);
         ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
         ubo.proj[1][1] *= -1;
 
@@ -1401,60 +1468,4 @@ private:
         return VK_FALSE;
     }
 };
-
-// int main() 
-// {
-//     size_t n;
-
-//     std::cin >> n;
-
-//     float x, y, z;
-//     float w = 1.0;
-
-//     std::vector <float> vec_x;
-//     std::vector <float> vec_y;
-//     std::vector <float> vec_z;
-
-//     for (size_t i = 0; i < 3 * n; ++i)
-//     {
-//         std::cin >> x >> y >> z;
-
-//         if (w < std::abs (x))
-//             w = std::abs (x);
-
-//         if (w < std::abs (y))
-//             w = std::abs (y);
-
-//         if (w < std::abs (z))
-//             w = std::abs (z);
-
-//         vec_x.push_back (x);
-//         vec_y.push_back (y);
-//         vec_z.push_back (z);
-//     }
-
-//     for (size_t i = 0; i < 3 * n; ++i)
-//     {
-//         vec_x[i] = vec_x[i] / w;
-//         vec_y[i] = vec_y[i] / w;
-//         vec_z[i] = vec_z[i] / w;
-    
-//         vertices.push_back ({{vec_x[i], vec_y[i], vec_z[i]}, {0.0f, 1.0f, 0.0f}});
-//         indices.push_back (i);
-//     }
-
-//     HelloTriangleApplication app;
-
-//     try 
-//     {
-//         app.run();
-//     } 
-
-//     catch (const std::exception& e) 
-//     {
-//         std::cerr << e.what() << std::endl;
-//         return EXIT_FAILURE;
-//     }
-
-//     return EXIT_SUCCESS;
-// }
+}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "triangle.h"
+#include "../vulkan/vulkan.cpp"
 
 namespace geom
 {
@@ -916,5 +917,126 @@ int tab_func (int tab_number)
         std::cout << "\t";
 
     return 0;
+}
+
+//render func
+int start_render (std::vector <triangle_> T, std::set <int> res1)
+{
+    size_t n = T.size();
+
+    double w = 1.0;
+
+    double max_x = T[0].a.x, max_y = T[0].a.y, max_z = T[0].a.z;
+    double min_x = max_x, min_y = max_y, min_z = max_z;
+
+    for (int i = 0; i < n; ++i)
+    {
+        if (max_x < std::max ({T[i].a.x, T[i].b.x, T[i].c.x})) //TODO: delete copypaste
+            max_x = std::max ({T[i].a.x, T[i].b.x, T[i].c.x});
+
+        if (min_x > std::min ({T[i].a.x, T[i].b.x, T[i].c.x}))
+            min_x = std::min ({T[i].a.x, T[i].b.x, T[i].c.x});
+
+        if (max_y < std::max ({T[i].a.y, T[i].b.y, T[i].c.y}))
+            max_y = std::max ({T[i].a.y, T[i].b.y, T[i].c.y});
+
+        if (min_y > std::min ({T[i].a.y, T[i].b.y, T[i].c.y}))
+            min_y = std::min ({T[i].a.y, T[i].b.y, T[i].c.y});
+
+        if (max_z < std::max ({T[i].a.z, T[i].b.z, T[i].c.z}))
+            max_z = std::max ({T[i].a.z, T[i].b.z, T[i].c.z});
+
+        if (min_z > std::min ({T[i].a.z, T[i].b.z, T[i].c.z}))
+            min_z = std::min ({T[i].a.z, T[i].b.z, T[i].c.z});
+    }
+
+    for (int i = 0; i < n; ++i)
+    {
+        T[i].a.x -= (max_x - min_x) / 2;
+        T[i].b.x -= (max_x - min_x) / 2;
+        T[i].c.x -= (max_x - min_x) / 2;
+
+        T[i].a.y -= (max_y - min_y) / 2;
+        T[i].b.y -= (max_y - min_y) / 2;
+        T[i].c.y -= (max_y - min_y) / 2;
+
+        T[i].a.z -= (max_z - min_z) / 2;
+        T[i].b.z -= (max_z - min_z) / 2;
+        T[i].c.z -= (max_z - min_z) / 2;
+
+        if (w < std::abs(T[i].a.x))
+            w = std::abs(T[i].a.x);
+
+        if (w < std::abs(T[i].a.y))
+            w = std::abs(T[i].a.y);
+
+        if (w < std::abs(T[i].a.z))
+            w = std::abs(T[i].a.z);
+
+        if (w < std::abs(T[i].b.x))
+            w = std::abs(T[i].b.x);
+
+        if (w < std::abs(T[i].b.y))
+            w = std::abs(T[i].b.y);
+
+        if (w < std::abs(T[i].b.z))
+            w = std::abs(T[i].b.z);
+
+        if (w < std::abs(T[i].c.x))
+            w = std::abs(T[i].c.x);
+
+        if (w < std::abs(T[i].c.y))
+            w = std::abs(T[i].c.y);
+
+        if (w < std::abs(T[i].c.z))
+            w = std::abs(T[i].c.z);
+    }
+    
+    w = 1.1 * w;
+
+    for (int i = 0; i < n; ++i)
+    {
+        T[i].a.x = T[i].a.x / w;
+        T[i].a.y = T[i].a.y / w;
+        T[i].a.z = T[i].a.z / w;
+
+        T[i].b.x = T[i].b.x / w;
+        T[i].b.y = T[i].b.y / w;
+        T[i].b.z = T[i].b.z / w;
+
+        T[i].c.x = T[i].c.x / w;
+        T[i].c.y = T[i].c.y / w;
+        T[i].c.z = T[i].c.z / w;
+    }
+
+    for (size_t i = 0; i < 3 * n; ++i)
+        vulkan::indices.push_back (i);
+
+    for (size_t i = 0; i < n; ++i)
+    {
+        glm::vec3 color = {0.0f, 0.0f, 1.0f};
+
+        if (res1.find (i) != res1.end())
+            color = {1.0f, 0.0f, 0.0f};
+
+        vulkan::vertices.push_back ({{T[i].a.x, T[i].a.y, T[i].a.z}, color});
+        vulkan::vertices.push_back ({{T[i].b.x, T[i].b.y, T[i].b.z}, color});
+        vulkan::vertices.push_back ({{T[i].c.x, T[i].c.y, T[i].c.z}, color});
+    }
+
+    vulkan::HelloTriangleApplication app;
+
+    try 
+    {
+        app.run();
+    } 
+
+    catch (const std::exception& e) 
+    {
+        std::cerr << e.what() << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
 }

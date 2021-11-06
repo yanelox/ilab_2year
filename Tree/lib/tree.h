@@ -32,7 +32,7 @@ namespace tree
                 return false;
 
             if (left != nullptr and rhs.left != nullptr)
-                res *= ((*left) == (*rhs.left));
+                res = res and ((*left) == (*rhs.left));
 
             if (right == nullptr and rhs.right != nullptr or
                 right != nullptr and rhs.right == nullptr)
@@ -73,7 +73,7 @@ namespace tree
             node_ *cur = top;
             node_ *cur_rhs = rhs.top;
 
-            while (true)
+            while (cur->left != nullptr and cur->right != nullptr and cur->parent == nullptr)
             {
                 if (cur_rhs->left != nullptr and cur->left == nullptr)
                 {
@@ -108,9 +108,6 @@ namespace tree
                         cur = cur->parent;
                         cur_rhs = cur_rhs->parent;
                     }
-
-                    else
-                        break;
                 }
             }
         }
