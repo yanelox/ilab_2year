@@ -134,6 +134,8 @@ namespace tree
             if (this == &rhs)
                 return *this;
 
+            delete top;
+
             top = rhs.top;
             size = rhs.size;
 
