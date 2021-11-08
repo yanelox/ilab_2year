@@ -1,7 +1,10 @@
 #pragma once
 
 #include "triangle.h"
+
+#ifdef VULKAN
 #include "../vulkan/vulkan.cpp"
+#endif
 
 namespace geom
 {
@@ -919,6 +922,7 @@ int tab_func (int tab_number)
     return 0;
 }
 
+#ifdef VULKAN
 //render func
 int start_render (std::vector <triangle_> T, std::set <int> res1)
 {
@@ -1019,9 +1023,13 @@ int start_render (std::vector <triangle_> T, std::set <int> res1)
         if (res1.find (i) != res1.end())
             color = {1.0f, 0.0f, 0.0f};
 
-        vulkan::vertices.push_back ({{T[i].a.x, T[i].a.y, T[i].a.z}, color});
-        vulkan::vertices.push_back ({{T[i].b.x, T[i].b.y, T[i].b.z}, color});
-        vulkan::vertices.push_back ({{T[i].c.x, T[i].c.y, T[i].c.z}, color});
+        surface_ S (T[i].a, T[i].b, T[i].c);
+
+        glm::vec3 normal (S.n.x, S.n.y, S.n.z);
+
+        vulkan::vertices.push_back ({{T[i].a.x, T[i].a.y, T[i].a.z}, color, normal});
+        vulkan::vertices.push_back ({{T[i].b.x, T[i].b.y, T[i].b.z}, color, normal});
+        vulkan::vertices.push_back ({{T[i].c.x, T[i].c.y, T[i].c.z}, color, normal});
     }
 
     vulkan::HelloTriangleApplication app;
@@ -1039,4 +1047,5 @@ int start_render (std::vector <triangle_> T, std::set <int> res1)
 
     return EXIT_SUCCESS;
 }
+#endif
 }

@@ -1,3 +1,4 @@
+#define VULKAN
 #include "lib/triangle.hpp"
 
 int main ()
