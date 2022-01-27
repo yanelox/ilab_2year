@@ -1,6 +1,7 @@
 #include <cassert>
 #include <vector>
 #include <iostream>
+#include <assert.h>
 
 namespace matrix
 {
@@ -95,11 +96,15 @@ namespace matrix
 
         T& operator [] (int x)
         {
+            assert (x < size);
+
             return elements[x];
         }
 
         const T& operator [] (int x) const
         {
+            assert (x < size);
+
             return elements[x];
         }
 
@@ -199,11 +204,15 @@ namespace matrix
 
         row_ <T> & operator [] (int x)
         {
+            assert (x < size);
+
             return elements[x];
         }
 
         const row_ <T> & operator [] (int x) const
         {
+            assert (x < size);
+
             return elements[x];
         }
 
