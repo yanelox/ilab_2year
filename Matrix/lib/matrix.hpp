@@ -3,51 +3,44 @@
 
 namespace matrix
 {
-    //frac
-
-    template <typename T>
-    bool frac_ <T>::is_valid () const
-    {
-        return !equal(denominator, (T) 0);
-    }
-
-    template <typename T>
-    void frac_ <T>::print () const
-    {
-        std::cout << numerator << "/" << denominator;
-    }
-
     //row 
-
-    
 
     //matrix
 
     template <typename T>
-    int matrix_ <T>::g_elimination ()
+    double matrix_ <T>::g_elimination ()
     {
-        int res = 1;
+        double res = 1.0;
+        double c = 1.0;
+        int k = 0;
 
-        for (size_t i = 0; i < get_size(); ++i)
+        for (int i = 0; i < size; ++i)
         {
-            size_t j = i;
-
-            while (j < get_size() and (*this)[j][i].is_zero())
-                ++j;
-            
-            if (j != get_size())
+            if (equal (static_cast <double> ((*this)[i][i]), 0.0))
             {
-                if (j != i)
-                {
-                    std::swap ((*this)[j], (*this)[i]);
-                    res *= -1;
+                for (k = i + 1; k < size; ++k)
+                    if (!equal (static_cast <double> ((*this)[k][i]), 0.0))
+                    {
+                        std::swap ((*this)[i], (*this)[k]);
+                        break;
+                    }
+
+                if (k == size)
+                {std::cout << i << std::endl;
+                    res = 0.0;
+                    break;
                 }
-                
-                for (size_t k = i + 1; k < get_size(); ++k)
-                    if ((*this)[k][i].is_zero() == 0)
-                        (*this)[k] = (*this)[k] - (*this)[i] * ((*this)[k][i] / (*this)[i][i]);
+            }
+
+            for (int j = i + 1; j < size; ++j)
+            {
+                    c = - static_cast <double> ((*this)[j][i]) / static_cast <double> ((*this)[i][i]);
+                    (*this)[j] = (*this)[j] + (*this)[i] * c;
             }
         }
+
+        for (int i = 0; i < size; ++i)
+            res *= static_cast <double> ((*this)[i][i]);
 
         return res;
     }
@@ -60,24 +53,5 @@ namespace matrix
                 std::cin >> (*this)[i][j];
 
         return 0;
-    }
-
-    template <typename T>
-    T matrix_ <T>::get_det (int sign) const
-    {
-        T res = T{1};
-
-        for (size_t i = 0; i < size; ++i)
-            if (!(*this)[i][i].is_zero())
-                res = res * (*this)[i][i];
-            else
-            {
-                res = T{0};
-                break;
-            }
-
-        res = res * sign;
-
-        return res;
     }
 }
