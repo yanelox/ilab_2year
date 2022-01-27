@@ -105,8 +105,7 @@ namespace matrix
 
         row_ <T> operator + (const row_ &rhs) const
         {
-            if (size != rhs.size)
-                return row_ <T> {};
+            assert (size == rhs.size);
 
             row_ res{size};
 
@@ -118,8 +117,7 @@ namespace matrix
 
         row_ <T> operator - (const row_ &rhs) const
         {
-            if (size != rhs.size)
-                return row_ <T> {};
+            assert (size == rhs.size);
 
             row_ res{size};
 
@@ -211,8 +209,7 @@ namespace matrix
 
         matrix_ <T> operator + (const matrix_ &rhs) const
         {
-            if (size != rhs.size)
-                return matrix_ <T> {};
+            assert (size == rhs.size);
 
             matrix_ <T> res{size};
 
@@ -224,8 +221,7 @@ namespace matrix
 
         matrix_ <T> operator - (const matrix_ &rhs) const
         {
-            if (size != rhs.size)
-                return matrix_ <T> {};
+            assert (size == rhs.size);
 
             matrix_ <T> res{size};
 
@@ -237,8 +233,7 @@ namespace matrix
 
         matrix_ <T> operator * (const matrix_ &rhs) const
         {
-            if (size != rhs.size)
-                return matrix_ <T> {};
+            assert (size == rhs.size);
 
             matrix_ <T> res{size};
 

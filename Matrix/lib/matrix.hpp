@@ -26,7 +26,7 @@ namespace matrix
                     }
 
                 if (k == size)
-                {std::cout << i << std::endl;
+                {
                     res = 0.0;
                     break;
                 }
