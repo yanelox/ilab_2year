@@ -25,7 +25,7 @@ int main ()
     // std::cout << M;
     // std::cout << std::endl;
 
-    double det = M.g_elimination();
+    double det = M.det();
 
     // std::cout << M;
 

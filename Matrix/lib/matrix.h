@@ -25,13 +25,13 @@ namespace matrix
     template <typename T>
     class row_
     {
-        T *elements;
+        T *elements = NULL;
 
-        size_t size;
+        size_t size = 0;
 
         public:
 
-        row_ (): elements {NULL}, size{0} {}
+        row_ () = default;
 
         row_ (size_t Size)
         {
@@ -78,13 +78,9 @@ namespace matrix
             if (this == &rhs)
                 return *this;
 
-            delete[] elements;
-
-            elements = rhs.elements;
+            std::swap (elements, rhs.elements);
 
             size = rhs.size;
-
-            rhs.elements = nullptr;
 
             return *this;
         }
@@ -108,39 +104,9 @@ namespace matrix
             return elements[x];
         }
 
-        row_ <T> operator + (const row_ &rhs) const
-        {
-            assert (size == rhs.size);
+        row_ <T> operator + (const row_ &rhs) const;
 
-            row_ res{size};
-
-            for (size_t i = 0; i < size; ++i)
-                res[i] = elements[i] + rhs.elements[i];
-
-            return res;
-        }
-
-        row_ <T> operator - (const row_ &rhs) const
-        {
-            assert (size == rhs.size);
-
-            row_ res{size};
-
-            for (size_t i = 0; i < size; ++i)
-                res[i] = elements[i] - rhs.elements[i];
-
-            return res;
-        }
-
-        row_ <T> operator * (const T &rhs) const
-        {
-            row_ res{size};
-
-            for (size_t i = 0; i < size; ++i)
-                res[i] = elements[i] * rhs;
-
-            return res;
-        }
+        row_ <T> operator - (const row_ &rhs) const;
 
         size_t get_size () const
         {
@@ -184,22 +150,23 @@ namespace matrix
         }
 
         template <typename It>
-        matrix_ (It start, It end, size_t Size)
+        matrix_ (It start, It end, size_t Size): elements {Size}, size{Size}
         {
-            (*this) = matrix_ <T> {Size};
+            for (size_t i = 0; i < Size; ++i)
+                elements[i] = row_ <T> {Size};
 
             size_t i = 0, j = 0;
 
             for (i = 0; i < Size and start != end; ++i)
                 for (j = 0; j < Size and start != end; ++j)
                 {
-                    (*this)[i][j] = *start;
+                    elements[i][j] = *start;
                     ++start;
                 }
 
             for (; i < Size; ++i)
                 for (; j < Size; ++j)
-                    (*this)[i][j] = T {0};
+                    elements[i][j] = T {0};
         }
 
         row_ <T> & operator [] (int x)
@@ -216,61 +183,11 @@ namespace matrix
             return elements[x];
         }
 
-        matrix_ <T> operator + (const matrix_ &rhs) const
-        {
-            assert (size == rhs.size);
+        matrix_ <T> operator + (const matrix_ &rhs) const;
 
-            matrix_ <T> res{size};
+        matrix_ <T> operator - (const matrix_ &rhs) const;
 
-            for (size_t i = 0; i < size; ++i)
-                res[i] = elements[i] + rhs.elements[i];
-
-            return res;
-        }
-
-        matrix_ <T> operator - (const matrix_ &rhs) const
-        {
-            assert (size == rhs.size);
-
-            matrix_ <T> res{size};
-
-            for (size_t i = 0; i < size; ++i)
-                res[i] = elements[i] - rhs.elements[i];
-
-            return res;
-        }
-
-        matrix_ <T> operator * (const matrix_ &rhs) const
-        {
-            assert (size == rhs.size);
-
-            matrix_ <T> res{size};
-
-            T sum = static_cast <T> (0);
-
-            for (int i = 0; i < size; ++i)
-                for (int j = 0; j < size; ++j)
-                {
-                    sum = static_cast <T> (0);
-
-                    for (int k = 0; k < size; ++k)
-                        sum = sum + (*this)[i][k] * rhs[k][j];
-
-                    res[i][j] = sum;
-                }
-
-            return res;
-        }
-
-        matrix_ <T> operator * (const T &c) const
-        {
-            matrix_ <T> res{size};
-
-            for (int i = 0; i < size; ++i)
-                res[i] = (*this)[i] * c;
-
-            return res;
-        }
+        matrix_ <T> operator * (const matrix_ &rhs) const;
 
         size_t get_size () const
         {
@@ -279,7 +196,7 @@ namespace matrix
 
         int fill ();
 
-        double g_elimination ();
+        double det ();
     };
 
     template <typename T>
