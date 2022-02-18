@@ -135,13 +135,9 @@ namespace matrix
     }
 
     template <typename T>
-    double matrix_ <T>::det ()
+    T matrix_ <T>::det ()
     {
-        matrix_ <double> work_matrix {size};
-
-        for (int i = 0; i < size; ++i)
-            for (int j = 0; j < size; ++j)
-                work_matrix.elements[i][j] = elements[i][j];
+        matrix_ <double> work_matrix {*this};
 
         double res = 1.0;
         double c = 1.0;
@@ -149,14 +145,16 @@ namespace matrix
 
         for (int i = 0; i < size; ++i)
         {
-            if (equal (static_cast <double> (work_matrix.elements[i][i]), 0.0))
+            if (equal (work_matrix.elements[i][i], 0.0))
             {
-                for (k = i + 1; k < size; ++k)
-                    if (!equal (static_cast <double> (work_matrix.elements[k][i]), 0.0))
-                    {
-                        std::swap (work_matrix.elements[i], work_matrix.elements[k]);
-                        break;
-                    }
+                auto should_swap = [i](const row_ <double> &rhs) {return !equal (rhs[i], 0.0);};
+
+                auto find_result = std::find_if (work_matrix.elements.begin(), 
+                                                 work_matrix.elements.end(),
+                                                 should_swap);
+
+                if (find_result != work_matrix.elements.end())
+                    std::swap (work_matrix.elements[i], work_matrix.elements[k]);
 
                 if (k == size)
                 {
@@ -167,15 +165,15 @@ namespace matrix
 
             for (int j = i + 1; j < size; ++j)
             {
-                    c = - static_cast <double> (work_matrix.elements[j][i]) / static_cast <double> (work_matrix.elements[i][i]);
+                    c = - work_matrix.elements[j][i] / work_matrix.elements[i][i];
                     work_matrix.elements[j] = work_matrix.elements[j] + work_matrix.elements[i] * c;
             }
         }
 
         for (int i = 0; i < size; ++i)
-            res *= static_cast <double> (work_matrix.elements[i][i]);
+            res *= work_matrix.elements[i][i];
 
-        return res;
+        return static_cast <T> (res);
     }
 
     template <typename T>

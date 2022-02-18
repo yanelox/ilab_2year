@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cassert>
 #include <vector>
 #include <iostream>
@@ -40,38 +41,94 @@ namespace matrix
                 elements = new T[Size];
                 size = Size;
             }
+
             catch(const std::exception& e)
             {
-                std::cerr << e.what() << '\n';
-            }   
+                throw e;
+            }
         }
 
         row_ (const std::vector <T> &Vec)
         {
-            size = Vec.size();
+            T* buffer = nullptr;
 
             try
             {
-                elements = new T[size];
+                buffer = new T[Vec.size()];
 
-                for (size_t i = 0; i < size; ++i)
-                    elements[i] = Vec[i];
+                std::copy (Vec.begin(), Vec.end(), buffer);
             }
 
             catch(const std::exception& e)
             {
-                std::cerr << e.what() << '\n';
+                delete[] buffer;
+                throw e;
             }
+
+            size = Vec.size();
+            elements = buffer;
         }
 
-        row_ (const row_ <T> &rhs) = delete;
+        row_ (const row_ <T> &rhs)
+        {
+            T* buffer = nullptr;
+
+            try
+            {
+                buffer = new T[rhs.size];
+                
+                std::copy (rhs.begin(), rhs.end(), buffer);
+            }
+
+            catch(const std::exception& e)
+            {
+                delete[] buffer;
+
+                throw e;
+            }
+            
+            elements = buffer;
+            size = rhs.size;
+        }
+
+        T* begin () const
+        {
+            return elements;
+        }
+
+        T* end () const
+        {
+            return elements + size;
+        }
 
         row_ (row_ <T> && rhs): elements{rhs.elements}, size{rhs.size}
         {
             rhs.elements = nullptr;
         }
 
-        row_ <T> & operator = (const row_ &rhs) = delete;
+        row_ <T> & operator = (const row_ &rhs)
+        {
+            T* buffer = nullptr;
+
+            try
+            {
+                buffer = new T[rhs.size];
+                std::copy (rhs.begin(), rhs.end(), buffer);
+            }
+
+            catch(const std::exception& e)
+            {
+                delete[] buffer;
+                throw e;
+            }
+
+            delete[] elements;
+
+            elements = buffer;
+            size = rhs.size;
+
+            return *this;
+        }
 
         row_ <T> & operator = (row_ &&rhs)
         {
@@ -166,7 +223,24 @@ namespace matrix
 
             for (; i < Size; ++i)
                 for (; j < Size; ++j)
-                    elements[i][j] = T {0};
+                    elements[i][j] = static_cast <T> (0);
+        }
+
+        matrix_ (const matrix_ <T> &rhs): elements {rhs.size}, size{rhs.size}
+        {
+            for (size_t i = 0; i < size; ++i)
+                elements[i] = rhs.elements[i];
+        }
+
+        template <typename U>
+        matrix_ (const matrix_ <U> &rhs): elements {rhs.size()}, size{rhs.size()}
+        {
+            for (size_t i = 0; i < size; ++i)
+                elements[i] = row_ <T> {size};
+
+            for (int i = 0; i < size; ++i)
+                for (int j = 0; j < size; ++j)
+                    elements[i][j] = static_cast <T> (rhs.elements[i][j]);
         }
 
         row_ <T> & operator [] (int x)
@@ -196,7 +270,7 @@ namespace matrix
 
         int fill ();
 
-        double det ();
+        T det ();
     };
 
     template <typename T>
