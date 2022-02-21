@@ -24,72 +24,80 @@ namespace matrix
     }
 
     template <typename T>
-    class row_
+    class row_buff
     {
-        T *elements = NULL;
+        protected:
 
-        size_t size = 0;
+        T* elements;
+        size_t size;
+
+        protected:
+
+        row_buff (size_t Size = 0): elements ((Size == 0) ? nullptr : 
+                                                         static_cast <T*> (::operator new (sizeof (T) * Size))),
+                                    size (Size)
+        {
+            
+        }
+
+        ~row_buff ()
+        {
+            T* iter = elements;
+
+            while (iter != elements + size)
+            {
+                iter->~T();
+                ++iter;
+            }
+
+            ::operator delete (elements);
+        }
+
+        row_buff (const row_buff &) = delete;
+        row_buff & operator = (const row_buff &) = delete;
+
+        row_buff (row_buff &&rhs) noexcept : elements (rhs.elements), size(rhs.size)
+        {
+            rhs.elements = nullptr;
+            rhs.size = 0;
+        }
+
+        row_buff & operator = (row_buff &&rhs) noexcept
+        {
+            std::swap (elements, rhs.elements);
+            std::swap (size, rhs.size);
+
+            return *this;
+        }
+    };
+
+    template <typename T>
+    class row_ : row_buff <T>
+    {
+        using row_buff <T>::elements;
+        using row_buff <T>::size;
 
         public:
 
-        row_ () = default;
+        row_ (size_t Size = 0): row_buff <T> (Size) {}
 
-        row_ (size_t Size)
+        row_ (const row_ &rhs): row_buff <T> (rhs.size)
         {
-            try
-            {
-                elements = new T[Size];
-                size = Size;
-            }
-
-            catch(const std::exception& e)
-            {
-                throw e;
-            }
+            for (size_t i = 0; i < size; ++i)
+                new (elements + i) T (rhs.elements[i]);
         }
 
-        row_ (const std::vector <T> &Vec)
+        row_ & operator = (const row_ &rhs)
         {
-            T* buffer = nullptr;
+            row_ tmp(rhs);
+            std::swap (*this, tmp);
 
-            try
-            {
-                buffer = new T[Vec.size()];
-
-                std::copy (Vec.begin(), Vec.end(), buffer);
-            }
-
-            catch(const std::exception& e)
-            {
-                delete[] buffer;
-                throw e;
-            }
-
-            size = Vec.size();
-            elements = buffer;
+            return *this;
         }
 
-        row_ (const row_ <T> &rhs)
-        {
-            T* buffer = nullptr;
+        row_ (row_ &&rhs) = default;
 
-            try
-            {
-                buffer = new T[rhs.size];
-                
-                std::copy (rhs.begin(), rhs.end(), buffer);
-            }
-
-            catch(const std::exception& e)
-            {
-                delete[] buffer;
-
-                throw e;
-            }
-            
-            elements = buffer;
-            size = rhs.size;
-        }
+        row_ & operator = (row_ &&rhs) = default;
 
         T* begin () const
         {
@@ -101,60 +109,14 @@ namespace matrix
             return elements + size;
         }
 
-        row_ (row_ <T> && rhs): elements{rhs.elements}, size{rhs.size}
-        {
-            rhs.elements = nullptr;
-        }
-
-        row_ <T> & operator = (const row_ &rhs)
-        {
-            T* buffer = nullptr;
-
-            try
-            {
-                buffer = new T[rhs.size];
-                std::copy (rhs.begin(), rhs.end(), buffer);
-            }
-
-            catch(const std::exception& e)
-            {
-                delete[] buffer;
-                throw e;
-            }
-
-            delete[] elements;
-
-            elements = buffer;
-            size = rhs.size;
-
-            return *this;
-        }
-
-        row_ <T> & operator = (row_ &&rhs)
-        {
-            if (this == &rhs)
-                return *this;
-
-            std::swap (elements, rhs.elements);
-
-            size = rhs.size;
-
-            return *this;
-        }
-
-        ~row_ ()
-        {
-            delete[] elements;
-        }
-
-        T& operator [] (int x)
+        T& operator [] (size_t x)
         {
             assert (x < size);
 
             return elements[x];
         }
 
-        const T& operator [] (int x) const
+        const T& operator [] (size_t x) const
         {
             assert (x < size);
 
@@ -202,15 +164,15 @@ namespace matrix
 
         matrix_ (size_t Size): elements{Size}, size{Size}
         {
-            for (size_t i = 0; i < Size; i++)
-                elements[i] = row_ <T> {Size};
+            for (size_t i = 0; i < size; ++i)
+                new (&elements[i]) row_ <T> (Size);
         }
 
         template <typename It>
         matrix_ (It start, It end, size_t Size): elements {Size}, size{Size}
         {
             for (size_t i = 0; i < Size; ++i)
-                elements[i] = row_ <T> {Size};
+                new (&elements[i]) row_ <T> (Size);
 
             size_t i = 0, j = 0;
 
@@ -223,34 +185,38 @@ namespace matrix
 
             for (; i < Size; ++i)
                 for (; j < Size; ++j)
-                    elements[i][j] = static_cast <T> (0);
+                    elements[i][j] = 0;
         }
 
         matrix_ (const matrix_ <T> &rhs): elements {rhs.size}, size{rhs.size}
         {
             for (size_t i = 0; i < size; ++i)
-                elements[i] = rhs.elements[i];
+                new (&elements[i]) row_ <T> (size);
+
+            for (int i = 0; i < size; ++i)
+                for (int j = 0; j < size; ++j)
+                    elements[i][j] = rhs.elements[i][j];
         }
 
         template <typename U>
         matrix_ (const matrix_ <U> &rhs): elements {rhs.size()}, size{rhs.size()}
         {
             for (size_t i = 0; i < size; ++i)
-                elements[i] = row_ <T> {size};
+                new (&elements[i]) row_ <T> (size);
 
             for (int i = 0; i < size; ++i)
                 for (int j = 0; j < size; ++j)
-                    elements[i][j] = static_cast <T> (rhs.elements[i][j]);
+                    elements[i][j] = rhs.elements[i][j];
         }
 
-        row_ <T> & operator [] (int x)
+        row_ <T> & operator [] (size_t x)
         {
             assert (x < size);
 
             return elements[x];
         }
 
-        const row_ <T> & operator [] (int x) const
+        const row_ <T> & operator [] (size_t x) const
         {
             assert (x < size);
 
@@ -270,7 +236,7 @@ namespace matrix
 
         int fill ();
 
-        T det ();
+        T det () const;
     };
 
     template <typename T>

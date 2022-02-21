@@ -92,12 +92,12 @@ namespace matrix
 
         matrix_ <T> res{size};
 
-        T sum = static_cast <T> (0);
+        T sum = 0;
 
         for (int i = 0; i < size; ++i)
             for (int j = 0; j < size; ++j)
             {
-                sum = static_cast <T> (0);
+                sum = 0;
 
                 for (int k = 0; k < size; ++k)
                     sum = sum + elements[i][k] * rhs[k][j];
@@ -135,10 +135,10 @@ namespace matrix
     }
 
     template <typename T>
-    T matrix_ <T>::det ()
+    T matrix_ <T>::det () const
     {
         matrix_ <double> work_matrix {*this};
-
+        
         double res = 1.0;
         double c = 1.0;
         int k = 0;
@@ -154,9 +154,9 @@ namespace matrix
                                                  should_swap);
 
                 if (find_result != work_matrix.elements.end())
-                    std::swap (work_matrix.elements[i], work_matrix.elements[k]);
+                    std::swap (work_matrix.elements[i], *find_result);
 
-                if (k == size)
+                else
                 {
                     res = 0.0;
                     break;
@@ -165,8 +165,8 @@ namespace matrix
 
             for (int j = i + 1; j < size; ++j)
             {
-                    c = - work_matrix.elements[j][i] / work_matrix.elements[i][i];
-                    work_matrix.elements[j] = work_matrix.elements[j] + work_matrix.elements[i] * c;
+                c = - work_matrix.elements[j][i] / work_matrix.elements[i][i];
+                work_matrix.elements[j] = work_matrix.elements[j] + work_matrix.elements[i] * c;
             }
         }
 
