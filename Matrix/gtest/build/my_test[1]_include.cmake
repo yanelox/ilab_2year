@@ -1,0 +1,5 @@
+if(EXISTS "/media/yanelox/DISK1/linux_work/ilab_2year/Matrix/gtest/build/my_test[1]_tests.cmake")
+  include("/media/yanelox/DISK1/linux_work/ilab_2year/Matrix/gtest/build/my_test[1]_tests.cmake")
+else()
+  add_test(my_test_NOT_BUILT my_test_NOT_BUILT)
+endif()

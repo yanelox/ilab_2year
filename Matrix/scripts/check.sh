@@ -1,11 +1,11 @@
-count=10
+count=20
 
 make matrix.out
 
 for((i=1;i<=$count;i++))
 do
 answ=$(./matrix.out < tests/$i.test)
-t_answ=$(cat answ/1.answ)
+t_answ=$(cat answ/$i.answ)
 # echo $answ
 # echo $t_answ
 if [ $t_answ = $answ ]

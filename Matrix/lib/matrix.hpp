@@ -47,14 +47,20 @@ namespace matrix
     template <typename T>
     row_ <T> operator * (const T &first, const row_ <T> &second)
     {
-        size_t Size = second.get_size();
+        return second * first;
+    }
 
-        row_ <T> res{Size};
+    template <typename T>
+    bool row_ <T>::operator == (const row_ &rhs) const
+    {
+        if (size != rhs.size)
+            return false;
 
-        for (size_t i = 0; i < Size; ++i)
-            res[i] = second[i] * first;
+        for (int i = 0; i < size; ++i)
+            if (elements[i] != rhs.elements[i])
+                return false;
 
-        return res;
+        return true;
     }
 
     //matrix
@@ -109,7 +115,7 @@ namespace matrix
     }
 
     template <typename T>
-    matrix_ <T> operator * (matrix_ <T> &first, const T &second)
+    matrix_ <T> operator * (const matrix_ <T> &first, const T &second)
     {
         size_t Size = first.get_size();
 
@@ -122,16 +128,9 @@ namespace matrix
     }
 
     template <typename T>
-    matrix_ <T> operator * (const T &second, matrix_ <T> &first)
+    matrix_ <T> operator * (const T &second, const matrix_ <T> &first)
     {
-        size_t Size = first.get_size();
-
-        matrix_ <T> res{Size};
-
-        for (int i = 0; i < Size; ++i)
-            res[i] = first[i] * second;
-
-        return res;
+        return first * second;
     }
 
     template <typename T>
@@ -149,12 +148,15 @@ namespace matrix
             {
                 auto should_swap = [i](const row_ <double> &rhs) {return !equal (rhs[i], 0.0);};
 
-                auto find_result = std::find_if (work_matrix.elements.begin(), 
+                auto find_result = std::find_if (work_matrix.elements.begin() + i + 1, 
                                                  work_matrix.elements.end(),
                                                  should_swap);
 
                 if (find_result != work_matrix.elements.end())
+                {
+                    res *= -1;
                     std::swap (work_matrix.elements[i], *find_result);
+                }
 
                 else
                 {
@@ -177,11 +179,24 @@ namespace matrix
     }
 
     template <typename T>
-    int matrix_ <T>::fill ()
+    bool matrix_ <T>::operator == (const matrix_ &rhs) const
+    {
+        if (size != rhs.size)
+            return false;
+
+        for (int i = 0; i < size; ++i)
+            if (!(elements[i] == rhs.elements[i]))
+                return false;
+
+        return true;
+    }
+
+    template <typename T>
+    int matrix_ <T>::fill (std::istream &in)
     {
         for (size_t i = 0; i < size; ++i)
             for (size_t j = 0; j < size; ++j)
-                std::cin >> elements[i][j];
+                in >> elements[i][j];
 
         return 0;
     }

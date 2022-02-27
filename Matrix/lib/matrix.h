@@ -87,6 +87,21 @@ namespace matrix
                 new (elements + i) T (rhs.elements[i]);
         }
 
+        template <typename It>
+        row_ (It start, It end, size_t Size): row_buff <T> {Size}
+        {
+            size_t i = 0;
+
+            for (i = 0; i < Size and start != end; ++i)
+            {
+                new (elements + i) T (*start);
+                ++start;
+            }
+
+            for (; i < Size; ++i)
+                new (elements + i) T (0);
+        }
+
         row_ & operator = (const row_ &rhs)
         {
             row_ tmp(rhs);
@@ -126,6 +141,8 @@ namespace matrix
         row_ <T> operator + (const row_ &rhs) const;
 
         row_ <T> operator - (const row_ &rhs) const;
+
+        bool operator == (const row_ &rhs) const;
 
         size_t get_size () const
         {
@@ -229,12 +246,14 @@ namespace matrix
 
         matrix_ <T> operator * (const matrix_ &rhs) const;
 
+        bool operator == (const matrix_ &rhs) const;
+
         size_t get_size () const
         {
             return size;
         }
 
-        int fill ();
+        int fill (std::istream &in);
 
         T det () const;
     };
