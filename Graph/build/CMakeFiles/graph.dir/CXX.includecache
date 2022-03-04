@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/126A613F6A6120A9/linux_work/ilab_2year/Graph/lib/graph.cpp
+graph.h
+/mnt/126A613F6A6120A9/linux_work/ilab_2year/Graph/lib/graph.h
+
+/mnt/126A613F6A6120A9/linux_work/ilab_2year/Graph/lib/graph.h
+algorithm
+-
+array
+-
+iostream
+-
+vector
+-
+FlexLexer.h
+-
+
+/mnt/126A613F6A6120A9/linux_work/ilab_2year/Graph/main.cpp
+lib/graph.cpp
+/mnt/126A613F6A6120A9/linux_work/ilab_2year/Graph/lib/graph.cpp
+
