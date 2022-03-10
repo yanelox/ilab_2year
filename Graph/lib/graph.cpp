@@ -23,51 +23,31 @@ namespace graph
         while ((a = lexer->yylex()) != 0) //TODO: may be delete copypaste ?
         {
             if (a <= 0) //not a node number
-            {
-                std::cout << "Incorrect input\n";
-
                 return 0;
-            }
 
             first = a;
 
             a = lexer->yylex();
 
             if (a != tokens::edge)
-            {
-                std::cout << "Incorrect input\n";
-
                 return 0;
-            }
 
             a = lexer->yylex();
 
             if (a <= 0) //not a node number
-            {
-                std::cout << "Incorrect input\n";
-
                 return 0;
-            }
 
             second = a;
 
             a = lexer->yylex();
 
             if (a != tokens::comma)
-            {
-                std::cout << "Incorrect input\n";
-
                 return 0;
-            }
 
             a = lexer->yylex();
 
             if (a <= 0) //not a edge info
-            {
-                std::cout << "Incorrect input\n";
-
                 return 0;
-            }
 
             info = a;
 
