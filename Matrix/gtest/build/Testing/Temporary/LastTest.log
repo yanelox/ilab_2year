@@ -1,0 +1,273 @@
+Start testing: Mar 10 20:02 MSK
+----------------------------------------------------------
+1/10 Testing: Test_row_.Operator_equal
+1/10 Test: Test_row_.Operator_equal
+Command: "/media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/my_test" "--gtest_filter=Test_row_.Operator_equal" "--gtest_also_run_disabled_tests"
+Directory: /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build
+"Test_row_.Operator_equal" start time: Mar 10 20:02 MSK
+Output:
+----------------------------------------------------------
+Running main() from /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Test_row_.Operator_equal
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Test_row_
+[ RUN      ] Test_row_.Operator_equal
+[       OK ] Test_row_.Operator_equal (0 ms)
+[----------] 1 test from Test_row_ (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"Test_row_.Operator_equal" end time: Mar 10 20:02 MSK
+"Test_row_.Operator_equal" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/10 Testing: Test_row_.Operator_assignment
+2/10 Test: Test_row_.Operator_assignment
+Command: "/media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/my_test" "--gtest_filter=Test_row_.Operator_assignment" "--gtest_also_run_disabled_tests"
+Directory: /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build
+"Test_row_.Operator_assignment" start time: Mar 10 20:02 MSK
+Output:
+----------------------------------------------------------
+Running main() from /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Test_row_.Operator_assignment
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Test_row_
+[ RUN      ] Test_row_.Operator_assignment
+[       OK ] Test_row_.Operator_assignment (0 ms)
+[----------] 1 test from Test_row_ (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"Test_row_.Operator_assignment" end time: Mar 10 20:02 MSK
+"Test_row_.Operator_assignment" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/10 Testing: Test_row_.CopyConstruct
+3/10 Test: Test_row_.CopyConstruct
+Command: "/media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/my_test" "--gtest_filter=Test_row_.CopyConstruct" "--gtest_also_run_disabled_tests"
+Directory: /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build
+"Test_row_.CopyConstruct" start time: Mar 10 20:02 MSK
+Output:
+----------------------------------------------------------
+Running main() from /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Test_row_.CopyConstruct
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Test_row_
+[ RUN      ] Test_row_.CopyConstruct
+[       OK ] Test_row_.CopyConstruct (0 ms)
+[----------] 1 test from Test_row_ (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"Test_row_.CopyConstruct" end time: Mar 10 20:02 MSK
+"Test_row_.CopyConstruct" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/10 Testing: Test_row_.MoveConstruct
+4/10 Test: Test_row_.MoveConstruct
+Command: "/media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/my_test" "--gtest_filter=Test_row_.MoveConstruct" "--gtest_also_run_disabled_tests"
+Directory: /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build
+"Test_row_.MoveConstruct" start time: Mar 10 20:02 MSK
+Output:
+----------------------------------------------------------
+Running main() from /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Test_row_.MoveConstruct
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Test_row_
+[ RUN      ] Test_row_.MoveConstruct
+[       OK ] Test_row_.MoveConstruct (0 ms)
+[----------] 1 test from Test_row_ (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (1 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"Test_row_.MoveConstruct" end time: Mar 10 20:02 MSK
+"Test_row_.MoveConstruct" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/10 Testing: Test_row_.MoveAssignment
+5/10 Test: Test_row_.MoveAssignment
+Command: "/media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/my_test" "--gtest_filter=Test_row_.MoveAssignment" "--gtest_also_run_disabled_tests"
+Directory: /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build
+"Test_row_.MoveAssignment" start time: Mar 10 20:02 MSK
+Output:
+----------------------------------------------------------
+Running main() from /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Test_row_.MoveAssignment
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Test_row_
+[ RUN      ] Test_row_.MoveAssignment
+[       OK ] Test_row_.MoveAssignment (0 ms)
+[----------] 1 test from Test_row_ (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"Test_row_.MoveAssignment" end time: Mar 10 20:02 MSK
+"Test_row_.MoveAssignment" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/10 Testing: Test_matrix_.Operator_equal
+6/10 Test: Test_matrix_.Operator_equal
+Command: "/media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/my_test" "--gtest_filter=Test_matrix_.Operator_equal" "--gtest_also_run_disabled_tests"
+Directory: /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build
+"Test_matrix_.Operator_equal" start time: Mar 10 20:02 MSK
+Output:
+----------------------------------------------------------
+Running main() from /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Test_matrix_.Operator_equal
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Test_matrix_
+[ RUN      ] Test_matrix_.Operator_equal
+[       OK ] Test_matrix_.Operator_equal (0 ms)
+[----------] 1 test from Test_matrix_ (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"Test_matrix_.Operator_equal" end time: Mar 10 20:02 MSK
+"Test_matrix_.Operator_equal" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/10 Testing: Test_matrix_.Operator_assignment
+7/10 Test: Test_matrix_.Operator_assignment
+Command: "/media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/my_test" "--gtest_filter=Test_matrix_.Operator_assignment" "--gtest_also_run_disabled_tests"
+Directory: /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build
+"Test_matrix_.Operator_assignment" start time: Mar 10 20:02 MSK
+Output:
+----------------------------------------------------------
+Running main() from /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Test_matrix_.Operator_assignment
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Test_matrix_
+[ RUN      ] Test_matrix_.Operator_assignment
+[       OK ] Test_matrix_.Operator_assignment (0 ms)
+[----------] 1 test from Test_matrix_ (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"Test_matrix_.Operator_assignment" end time: Mar 10 20:02 MSK
+"Test_matrix_.Operator_assignment" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/10 Testing: Test_matrix_.CopyConstruct
+8/10 Test: Test_matrix_.CopyConstruct
+Command: "/media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/my_test" "--gtest_filter=Test_matrix_.CopyConstruct" "--gtest_also_run_disabled_tests"
+Directory: /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build
+"Test_matrix_.CopyConstruct" start time: Mar 10 20:02 MSK
+Output:
+----------------------------------------------------------
+Running main() from /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Test_matrix_.CopyConstruct
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Test_matrix_
+[ RUN      ] Test_matrix_.CopyConstruct
+[       OK ] Test_matrix_.CopyConstruct (0 ms)
+[----------] 1 test from Test_matrix_ (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"Test_matrix_.CopyConstruct" end time: Mar 10 20:02 MSK
+"Test_matrix_.CopyConstruct" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/10 Testing: Test_matrix_.MoveConstruct
+9/10 Test: Test_matrix_.MoveConstruct
+Command: "/media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/my_test" "--gtest_filter=Test_matrix_.MoveConstruct" "--gtest_also_run_disabled_tests"
+Directory: /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build
+"Test_matrix_.MoveConstruct" start time: Mar 10 20:02 MSK
+Output:
+----------------------------------------------------------
+Running main() from /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Test_matrix_.MoveConstruct
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Test_matrix_
+[ RUN      ] Test_matrix_.MoveConstruct
+[       OK ] Test_matrix_.MoveConstruct (0 ms)
+[----------] 1 test from Test_matrix_ (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (1 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"Test_matrix_.MoveConstruct" end time: Mar 10 20:02 MSK
+"Test_matrix_.MoveConstruct" time elapsed: 00:00:00
+----------------------------------------------------------
+
+10/10 Testing: Test_matrix_.MoveAssignment
+10/10 Test: Test_matrix_.MoveAssignment
+Command: "/media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/my_test" "--gtest_filter=Test_matrix_.MoveAssignment" "--gtest_also_run_disabled_tests"
+Directory: /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build
+"Test_matrix_.MoveAssignment" start time: Mar 10 20:02 MSK
+Output:
+----------------------------------------------------------
+Running main() from /media/jkoer/DISK1/linux_work/ilab_2year/Matrix/gtest/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = Test_matrix_.MoveAssignment
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from Test_matrix_
+[ RUN      ] Test_matrix_.MoveAssignment
+[       OK ] Test_matrix_.MoveAssignment (0 ms)
+[----------] 1 test from Test_matrix_ (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"Test_matrix_.MoveAssignment" end time: Mar 10 20:02 MSK
+"Test_matrix_.MoveAssignment" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Mar 10 20:02 MSK

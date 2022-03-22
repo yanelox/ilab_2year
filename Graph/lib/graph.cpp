@@ -64,47 +64,56 @@ namespace graph
     template <typename T, typename U>
     std::ostream& graph_ <T, U>::print (std::ostream& out) const
     {
-        if (data.empty())
-        {
-            out << "Empty graph\n";
+        // if (data.empty())
+        // {
+        //     out << "Empty graph\n";
 
-            return out;
-        }
+        //     return out;
+        // }
+
+        // for (int i = 0; i < data.size(); ++i)
+        //     out << i << "\t";
+
+        // out << std::endl;
+
+        // for (auto&& i:data)
+        //     out << i.start << "\t";
+
+        // out << std::endl;
+
+        // for (auto&& i:data)
+        //     out << i.next << "\t";
+
+        // out << std::endl;
+
+        // for (auto&& i:data)
+        //     out << i.prev << "\t";
+
+        // out << std::endl;
+
+        // if (!nodes_info.empty())
+        // {
+        //     for (auto&& i:nodes_info)
+        //         out << i << "\t";
+        // }
+
+        // else if (!edges_info.empty())
+        // {
+        //     for (int i = 0; i < nodes_count; ++i)
+        //         out << "\t";
+
+        //     for (auto&& i:edges_info)
+        //         out << i << "\t";
+
+        //     out << std::endl;
+        // }
 
         for (int i = 0; i < data.size(); ++i)
-            out << i << "\t";
-
-        out << std::endl;
-
-        for (auto&& i:data)
-            out << i.start << "\t";
-
-        out << std::endl;
-
-        for (auto&& i:data)
-            out << i.next << "\t";
-
-        out << std::endl;
-
-        for (auto&& i:data)
-            out << i.prev << "\t";
-
-        out << std::endl;
-
-        if (!nodes_info.empty())
         {
-            for (auto&& i:nodes_info)
-                out << i << "\t";
-        }
-
-        else if (!edges_info.empty())
-        {
-            for (int i = 0; i < nodes_count; ++i)
-                out << "\t";
-
-            for (auto&& i:edges_info)
-                out << i << "\t";
-
+            out << i << std::endl;
+            out << data[i].start << std::endl;
+            out << data[i].next << std::endl;
+            out << data[i].prev << std::endl;
             out << std::endl;
         }
 
@@ -117,7 +126,13 @@ namespace graph
         if (colorized != 0)
         {
             for (int i = 0; i < nodes_count; ++i)
-                out << i + 1 << " " << nodes_colors[i] << " ";
+            {
+                out << i + 1 << " " << nodes_colors[i];
+
+                if (i + 1 != nodes_count)
+
+                out << " ";
+            }
 
             out << std::endl;
         }
@@ -134,57 +149,72 @@ namespace graph
         nodes_colors.resize(nodes_count);
 
         std::vector <int> prev_nodes(nodes_count);
-
+        
         int prev_node = 0;
         char prev_color = 'b';
-
-        int cur_node = data[data[0].next ^ 1].start - 1;
-        prev_nodes[cur_node] = 0;
 
         int next_node = 0;
         int next_edge = 0;
 
-        nodes_colors[0] = 'b';
+        int cur_node = 0;
 
-        while (true)
+        int start_node = 0;
+
+        for (; start_node < nodes_count; ++start_node)
         {
-            nodes_colors[cur_node] = prev_color ^ 16;
+            prev_node = start_node;
 
-            next_edge = data[cur_node].next;
-            next_node = data[next_edge ^ 1].start - 1;
+            if (nodes_colors[prev_node] != '\0')
+                continue;
 
-            while (next_edge != cur_node and nodes_colors[next_node] != '\0')
+            prev_color = 'b';
+
+            cur_node = data[get_connected_edge (data[prev_node].next)].start - 1;
+        
+            prev_nodes[cur_node] = prev_node;
+
+            nodes_colors[0] = 'b';
+        
+            while (true)
             {
-                if (nodes_colors[next_node] != prev_color)
-                {
-                    nodes_colors.clear();
+                nodes_colors[cur_node] = prev_color ^ 16;
 
-                    return 0;
+                next_edge = data[cur_node].next;
+                next_node = data[get_connected_edge (next_edge)].start - 1;
+
+                while (next_edge != cur_node and nodes_colors[next_node] != '\0')
+                {
+                    if (nodes_colors[next_node] != prev_color)
+                    {
+                        nodes_colors.clear();
+
+                        return 0;
+                    }
+
+                    next_edge = data[next_edge].next;
+                    next_node = data[get_connected_edge (next_edge)].start - 1;
                 }
 
-                next_edge = data[next_edge].next;
-                next_node = data[next_edge ^ 1].start - 1;
-            }
-
-            if (next_edge == cur_node)
-            {
-                if (cur_node == 0)
+                if (next_edge == cur_node)
                 {
-                    colorized = 1;
-                    return 1;
+                    if (cur_node == start_node)
+                        break;
+
+                    cur_node = prev_nodes[cur_node];
                 }
 
-                cur_node = prev_nodes[cur_node];
-            }
+                else
+                {
+                    prev_nodes[next_node] = cur_node;
+                    cur_node = next_node;
+                }
 
-            else
-            {
-                prev_nodes[next_node] = cur_node;
-                cur_node = next_node;
+                prev_color ^= 16;
             }
-
-            prev_color ^= 16;
         }
+
+        colorized = 1;
+        return 1;
     }
 
     template <typename T, typename U>
@@ -211,7 +241,7 @@ namespace graph
             for (auto&& j:queue[i])
             {
                 int cur_edge = data[j].next;
-                int cur_node = data[cur_edge ^ 1].start - 1;
+                int cur_node = data[get_connected_edge (cur_edge)].start - 1;
 
                 while (cur_edge != j)
                 {
@@ -222,7 +252,7 @@ namespace graph
                     }
 
                     cur_edge = data[cur_edge].next;
-                    cur_node = data[cur_edge ^ 1].start - 1;
+                    cur_node = data[get_connected_edge (cur_edge)].start - 1;
                 }
             }
 

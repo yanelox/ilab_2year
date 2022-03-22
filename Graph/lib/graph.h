@@ -55,7 +55,7 @@ namespace graph
         int fill (It begin, It end)
         {
             auto res_find = std::max_element (begin, end, comp);
-
+            
             if (res_find == end)
             {
                 return 0;
@@ -64,7 +64,7 @@ namespace graph
             std::pair <int, int> res = *res_find;
 
             int max_node = std::max (res.first, res.second);
-
+            
             data.resize (max_node);
 
             for (auto i = begin; i != end; ++i)
@@ -154,6 +154,14 @@ namespace graph
                 nodes_info.push_back (0);
                 nodes_info.push_back (0);
             }
+        }
+
+        int get_connected_edge (int edge) const
+        {
+            if (nodes_count % 2 ^ edge % 2)
+                return edge - 1;
+
+            return edge + 1;
         }
 
         int input ();
