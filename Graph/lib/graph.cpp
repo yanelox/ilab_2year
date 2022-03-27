@@ -1,9 +1,5 @@
 #include "graph.h"
-
-int yyFlexLexer::yywrap ()
-{
-    return 1;
-}
+#include "driver.h"
 
 namespace graph
 {
@@ -12,51 +8,12 @@ namespace graph
     template <typename T, typename U>
     int graph_ <T, U>::input ()
     {
-        std::vector <int> edges_info_;
-        std::vector <std::pair <int, int>> data_;
+        yy::Driver driver;
 
-        FlexLexer* lexer = new yyFlexLexer;
+        driver.parse();
 
-        int a = 0;
-        int first = 0, second = 0, info = 0;
-
-        while ((a = lexer->yylex()) != 0) //TODO: may be delete copypaste ?
-        {
-            if (a <= 0) //not a node number
-                return 0;
-
-            first = a;
-
-            a = lexer->yylex();
-
-            if (a != tokens::edge)
-                return 0;
-
-            a = lexer->yylex();
-
-            if (a <= 0) //not a node number
-                return 0;
-
-            second = a;
-
-            a = lexer->yylex();
-
-            if (a != tokens::comma)
-                return 0;
-
-            a = lexer->yylex();
-
-            if (a <= 0) //not a edge info
-                return 0;
-
-            info = a;
-
-            data_.push_back ({first, second});
-            edges_info_.push_back (info);
-        }
-
-        fill (data_.begin(), data_.end());
-        fill_edges_info (edges_info_.begin(), edges_info_.end());
+        fill (driver.data_.begin(), driver.data_.end());
+        fill_edges_info (driver.edges_info_.begin(), driver.edges_info_.end());
 
         return 1;
     }
@@ -64,56 +21,47 @@ namespace graph
     template <typename T, typename U>
     std::ostream& graph_ <T, U>::print (std::ostream& out) const
     {
-        // if (data.empty())
-        // {
-        //     out << "Empty graph\n";
+        if (data.empty())
+        {
+            out << "Empty graph\n";
 
-        //     return out;
-        // }
-
-        // for (int i = 0; i < data.size(); ++i)
-        //     out << i << "\t";
-
-        // out << std::endl;
-
-        // for (auto&& i:data)
-        //     out << i.start << "\t";
-
-        // out << std::endl;
-
-        // for (auto&& i:data)
-        //     out << i.next << "\t";
-
-        // out << std::endl;
-
-        // for (auto&& i:data)
-        //     out << i.prev << "\t";
-
-        // out << std::endl;
-
-        // if (!nodes_info.empty())
-        // {
-        //     for (auto&& i:nodes_info)
-        //         out << i << "\t";
-        // }
-
-        // else if (!edges_info.empty())
-        // {
-        //     for (int i = 0; i < nodes_count; ++i)
-        //         out << "\t";
-
-        //     for (auto&& i:edges_info)
-        //         out << i << "\t";
-
-        //     out << std::endl;
-        // }
+            return out;
+        }
 
         for (int i = 0; i < data.size(); ++i)
+            out << i << "\t";
+
+        out << std::endl;
+
+        for (auto&& i:data)
+            out << i.start << "\t";
+
+        out << std::endl;
+
+        for (auto&& i:data)
+            out << i.next << "\t";
+
+        out << std::endl;
+
+        for (auto&& i:data)
+            out << i.prev << "\t";
+
+        out << std::endl;
+
+        if (!nodes_info.empty())
         {
-            out << i << std::endl;
-            out << data[i].start << std::endl;
-            out << data[i].next << std::endl;
-            out << data[i].prev << std::endl;
+            for (auto&& i:nodes_info)
+                out << i << "\t";
+        }
+
+        else if (!edges_info.empty())
+        {
+            for (int i = 0; i < nodes_count; ++i)
+                out << "\t";
+
+            for (auto&& i:edges_info)
+                out << i << "\t";
+
             out << std::endl;
         }
 
@@ -177,7 +125,7 @@ namespace graph
         
             while (true)
             {
-                nodes_colors[cur_node] = prev_color ^ 16;
+                nodes_colors[cur_node] = prev_color ^ bitmask;  
 
                 next_edge = data[cur_node].next;
                 next_node = data[get_connected_edge (next_edge)].start - 1;
@@ -209,7 +157,7 @@ namespace graph
                     cur_node = next_node;
                 }
 
-                prev_color ^= 16;
+                prev_color ^= bitmask;
             }
         }
 
@@ -236,7 +184,7 @@ namespace graph
             i = (queue[0].empty()) ? 1 : 0;
 
             for (auto&& j:queue[i])
-                nodes_colors[j] ^= 16;
+                nodes_colors[j] ^= bitmask;
 
             for (auto&& j:queue[i])
             {

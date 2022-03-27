@@ -3,10 +3,10 @@
 #include <iostream>
 #include <vector>
 
-#include <FlexLexer.h>
-
 namespace graph
 {
+    int bitmask = 16; //because 'r' ^ 16 = 'b' and 'b' ^ 16 = 'r'
+
     enum tokens
     {
         comma       = -3,
@@ -23,9 +23,9 @@ namespace graph
 
     struct data_
     {
-        int prev = 0;
-        int next = 0;
-        int start = 0;
+        int prev, next, start;
+
+        data_ (int prev_ = 0, int next_ = 0, int start_ = 0): prev (prev_), next (next_), start (start_) {}
     };
 
     template <typename T = bool, typename U = bool>
@@ -39,10 +39,7 @@ namespace graph
         std::vector <U> nodes_info;
         std::vector <T> edges_info;
 
-        std::vector <char> nodes_colors; //may be i should use nodes_info to store colors
-                                         // but i create special vector for this if user want
-                                         // to store colors and other information of nodes
-                                         // at the same time
+        std::vector <char> nodes_colors; 
 
         int colorized = 0;
 
@@ -71,27 +68,27 @@ namespace graph
             {
                 if (data[i->first - 1].prev == 0)
                 {
-                    data.push_back ({i->first - 1, i->first - 1, i->first});
+                    data.emplace_back (i->first - 1, i->first - 1, i->first);
 
                     data[i->first - 1].prev = data[i->first - 1].next = data.size() - 1;
                 }
 
                 else
                 {
-                    data.push_back ({data[i->first - 1].prev, i->first - 1, i->first});
+                    data.emplace_back (data[i->first - 1].prev, i->first - 1, i->first);
                     
                     data[i->first - 1].prev = data[data[i->first - 1].prev].next = data.size() - 1;
                 }
 
                 if (data[i->second - 1].prev == 0)
                 {
-                    data.push_back ({i->second - 1, i->second - 1, i->second});
+                    data.emplace_back (i->second - 1, i->second - 1, i->second);
                     data[i->second - 1].prev = data[i->second - 1].next = data.size() - 1;
                 }
 
                 else
                 {
-                    data.push_back ({data[i->second - 1].prev, i->second - 1, i->second});
+                    data.emplace_back (data[i->second - 1].prev, i->second - 1, i->second);
                 
                     data[i->second - 1].prev = data[data[i->second - 1].prev].next = data.size() - 1;
                 }

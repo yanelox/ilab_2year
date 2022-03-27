@@ -1,6 +1,11 @@
 %option c++
 
 %{
+    #include "parser.tab.hh"
+    int yyFlexLexer::yywrap ()
+    {
+        return 1;
+    }
 %}
 
 WS          [ \t\v\n]+
@@ -11,9 +16,9 @@ COMMA       [,]
 %%
 
 {WS}                // skip blanks and tabs
-{COMMA}             {return -3;}
-"--"                {return -1;}
-{DIGIT1}{DIGIT}*    {return atoi (yytext);}
-.                   {return -4;}
+{COMMA}             { return yy::parser::token_type::COMMA; }
+"--"                { return yy::parser::token_type::LINE; }
+{DIGIT1}{DIGIT}*    { return yy::parser::token_type::NUMBER; }
+.                   { return -yy::parser::token_type::LEXERR; }
 
 %%
